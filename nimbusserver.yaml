@@ -49,6 +49,7 @@
       - rpm-build
       - zlib.i686
       - libstdc++.i686
+      - python-pip
   - name: Install kernel-devel package for NV
     yum:
       name: kernel-devel
@@ -109,3 +110,42 @@
   - name: Install Docker Community Edition
     yum:
       name: docker-ce
+  - name: Enable and start Docker service
+    service: name=docker enabled=yes state=started
+  - name: Add demo user to docker group
+    user:
+      name: demo
+      groups: docker
+      append: yes
+  - name: Install Docker python library
+    pip:
+      name: docker
+  - name: Create Docker network demo-net
+    docker_network:
+      name: demo-net
+      ipam_options:
+        subnet: '172.50.0.0/16'
+        gateway: 172.50.0.1
+  - name: Install Docker Compose library
+    pip:
+      name: docker-compose
+  - name: Get Latest release info for Docker App
+    uri:
+      url: https://api.github.com/repos/docker/app/releases
+      return_content: true
+    register: json_reponse
+  - name: Download docker-app
+    unarchive:
+      src: "https://github.com/docker/app/releases/download/{{ json_reponse.json[0].name }}/docker-app-linux.tar.gz"
+      dest: /usr/local/bin
+      remote_src: yes
+  - name: Rename docker-app binary and set group ownership to docker
+    copy:
+      remote_src: true
+      src: /usr/local/bin/docker-app-linux
+      dest: /usr/local/bin/docker-app
+      group: docker
+      mode: 0775
+  - name: Install filezilla
+    yum:
+      name: filezilla
