@@ -1,0 +1,78 @@
+- hosts: localhost
+  remote_user: root
+  become: yes
+
+  tasks:
+  - name: Install Nimbus YUM packages
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - maven
+      - git
+      - gcc-c++
+      - java-1.8.0-openjdk-devel
+      - epel-release
+      - rpm-build
+      - zlib.i686
+      - libstdc++.i686
+  - name: Install kernel-devel package for NV
+    yum:
+      name: kernel-devel
+  - name: Install Telnet
+    yum:
+      name: telnet
+  - name: Install Dos2Unix
+    yum:
+      name: dos2unix
+  - name: Install nux-dextop for Exfat Utilities
+    yum:
+      name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+      state: present
+  - name: Install Exfat Utilities
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - exfat-utils
+      - fuse-exfat
+  - name: Install xrdp
+    yum:
+      name: xrdp
+  - name: Configure xrdp services
+    systemd:
+      name: xrdp
+      state: started
+      enabled: true
+  - name: Change Maximum Sessions to 1 in sesman.ini for xrdp
+    replace:
+      path: /etc/xrdp/sesman.ini
+      regexp: '^(.*)MaxSessions(.*)$'
+      replace: 'MaxSessions=1'
+      backup: yes
+  - name: Configure Google Chrome yum repository
+    yum_repository:
+      name: google-chrome
+      description: google-chrome
+      baseurl: http://dl.google.com/linux/chrome/rpm/stable/$basearch
+      enabled: yes
+      gpgcheck: yes
+      gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+  - name: Install Google Chrome
+    yum:
+      name: google-chrome-stable
+  - name: Configure Docker Community Edition yum repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+  - name: Install Docker yum Packages
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+  - name: Install Docker Community Edition
+    yum:
+      name: docker-ce
