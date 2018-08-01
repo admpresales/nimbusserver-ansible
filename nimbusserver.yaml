@@ -31,6 +31,11 @@
     lineinfile:
       dest: /etc/hosts
       line: 172.40.0.1  nimbusclient
+  - name: Allow VMWare Drag and Drop
+    file:
+      path: /home/demo/.cache/vmware/drag_and_drop
+      state: directory
+      mode: 0777
   - name: Install Nimbus YUM packages
     yum:
       name: "{{ packages }}"
