@@ -3,6 +3,20 @@
   become: yes
 
   tasks:
+  - name: Install Gnome Desktop
+    yum:
+      name: "@^GNOME Desktop"
+  - name: Install Graphical Administration Tools
+    yum:
+      name: "@Graphical Administration Tools"
+  - name: Disable initial-setup-graphical.service
+    service: name=initial-setup-graphical enabled=no state=stopped
+  - name: Create link for gnome desktok
+    file:
+      src: /lib/systemd/system/runlevel5.target
+      dest: /etc/systemd/system/default.target
+      state: link
+      force: true
   - name: Update all installed packages
     yum: name=* state=latest
   - name: Disable (mask) automatic updates
