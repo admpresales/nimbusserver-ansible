@@ -27,13 +27,11 @@
     user:
       name: demo
       comment: demo
-      password: Password1
-  - name: Check if firewalld exists
-    stat: path=/etc/init.d/firewalld
-    register: firewalld_status
+  - name: Set password for demo user
+    shell: echo demo:Password1 | sudo chpasswd
+    no_log: True
   - name: Stop and disable firewalld
     service: name=firewalld enabled=no state=stopped
-    when: firewalld_status.stat.exists
   - name: Disable SELinux
     selinux:
       state: disabled
