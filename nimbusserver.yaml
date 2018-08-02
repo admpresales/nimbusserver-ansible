@@ -63,10 +63,9 @@
       - libstdc++.i686
       - python-pip
       - python-devel
-  - name: Install psutil
+  - name: Install psutil to support dconf changes
     pip:
       name: psutil
-
   - block:
     - name: Configure Gnome Tweak Tool for Demo - Show Icons
       dconf: key="/org/gnome/desktop/background/show-desktop-icons" value="true" state=present
@@ -81,11 +80,38 @@
     - name: Configure Gnome Tweak Tool for Demo - Set Power Button to Nothing
       dconf: key="/org/gnome/settings-daemon/plugins/power/power-button-action" value="'nothing'" state=present
     - name: Configure Gnome Tweak Tool for Demo - Uncheck 'Show Application Menu' on Top Bar
-      dconf: key="/org/gnome/settings-daemon/plugins/xsettings/overrides" value="{'Gtk/ShellShowsAppMenu': <0>}" state=present
-    - name: Configure Gnome Tweak Tool for Demo - Check 'Show date' Application Menu on Top Bar
+      dconf:
+        key: "/org/gnome/settings-daemon/plugins/xsettings/overrides"
+        value: "{'Gtk/ShellShowsAppMenu': <0>}"
+        state: present
+    - name: Configure Gnome Tweak Tool - Check 'Show date' Application Menu on Top Bar
       dconf: key="/org/gnome/desktop/interface/clock-show-date" value="true" state=present
-    - name: Configure Gnome Tweak Tool for Demo - Set Number of Workspaces to 1
+    - name: Configure Gnome Tweak Tool - Set Number of Workspaces to 1
       dconf: key="/org/gnome/desktop/wm/preferences/num-workspaces" value="1" state=present
+    - name: Mute speaker volume
+      shell: amixer set Master mute
+    - name: Set Desktop Background Properties - Shading Type
+      dconf: key="/org/gnome/desktop/background/color-shading-type" value="'solid'" state=present
+    - name: Set Desktop Background Properties - Picture Option
+      dconf: key="/org/gnome/desktop/background/picture-options" value="'wallpaper'" state=present
+    - name: Set Desktop Background Properties - Picture Type
+      dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:////usr/share/gnome-control-center/pixmaps/noise-texture-light.png'" state=present
+    - name: Set Desktop Background Properties - Primary Color
+      dconf: key="/org/gnome/desktop/background/primary-color" value="'#425265'" state=present
+    - name: Set Desktop Background Properties - Secondary Color
+      dconf: key="/org/gnome/desktop/background/secondary-color" value="'#425265'" state=present
+    - name: Power Configuration - Set Power Saving Blank Screen to 'Never'
+      dconf: key="/org/gnome/desktop/session/idle-delay" value="uint32 0" state=present
+    - name: Time Settings - Clock format for interface to 12H Clock
+      dconf: key="/org/gnome/desktop/interface/clock-format" value="'12h'" state=present
+    - name: Time Settings - Clock format for files to 12H Clock
+      dconf: key="/org/gtk/settings/file-chooser/clock-format" value="'12h'" state=present
+    - name: Icon Settings - Set zoom to 50% (small)
+      dconf: key="/org/gnome/nautilus/icon-view/default-zoom-level" value="'small'" state=present
+    - name: Icon Settings - Sort Directories Before Files
+      dconf: key="/org/gtk/settings/file-chooser/sort-directories-first" value="true" state=present
+    - name: Icon Settings - Sort By set to 'Type'
+      dconf: key="/org/gnome/nautilus/preferences/default-sort-order" value="'type'" state=present
     become: yes
     become_user: demo
 
@@ -134,6 +160,16 @@
   - name: Install Google Chrome
     yum:
       name: google-chrome-stable
+  - name: Create managed policies directory for chrome
+    file:
+      path: /etc/opt/chrome/policies/managed
+      state: directory
+      mode: 0755
+  - name: Create managed policies directory for chrome
+    file:
+      path: /etc/opt/chrome/policies/recommended
+      state: directory
+      mode: 0755
   - name: Configure Docker Community Edition yum repository
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
