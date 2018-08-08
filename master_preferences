@@ -14,7 +14,7 @@
     "show_welcome_page" : false,
     "import_search_engine" : false,
     "import_history" : false,
-    "import_bookmarks" : true,
+    "import_bookmarks" : false,
     "import_bookmarks_from_file": "/opt/google/chrome/archive/chrome-bookmarks.html",
     "suppress_first_run_bubble" : true,
     "create_all_shortcuts" : false,
