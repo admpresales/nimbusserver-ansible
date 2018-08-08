@@ -6,7 +6,7 @@
     uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.3.3652.1"}
     uft_extension_id: hpoiplhbnkgnpjkkilfahkkcimachkkj
     chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
-    pubkey: "{{ lookup('file', './id_dsa.pub') }}"
+    pubkey: "{{ lookup('file', './id_rsa.pub') }}"
 
 
   tasks:
