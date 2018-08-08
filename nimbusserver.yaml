@@ -304,11 +304,11 @@
       key: '{{ pubkey }}'
     become: yes
     become_user: root
-  - name: Create SSH directory for root
-    file:
-      path: /root/.ssh
-      state: directory
-      mode: 0777
+  - name: Set authorized key for root
+    authorized_key:
+      user: root
+      state: present
+      key: '{{ pubkey }}'
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
@@ -321,11 +321,6 @@
       src: id_rsa.pub
       dest: /root/.ssh
       mode: 644
-  - name: Set authorized key for root
-    authorized_key:
-      user: root
-      state: present
-      key: '{{ pubkey }}'
   - name: Set authorized key for demo
     authorized_key:
       user: demo
@@ -343,7 +338,7 @@
       remote_src: true
       src: id_rsa.pub
       owner: demo
-      dest: /root/.ssh
+      dest: /home/demo/.ssh
       mode: 644
   - name: Install filezilla
     yum:
