@@ -6,6 +6,7 @@
     uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.3.3652.1"}
     uft_extension_id: hpoiplhbnkgnpjkkilfahkkcimachkkj
     chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
+    pubkey: "{{ lookup('file', '/root/.ssh/id_dsa.pub') }}"
 
 
   tasks:
@@ -300,7 +301,7 @@
     authorized_key:
       user: root
       state: present
-      key: '{{ item }}'
+      key: '{{ pubkey }}'
     with_file:
       - /root/.ssh/id_rsa.pub
     become: yes
