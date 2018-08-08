@@ -5,6 +5,7 @@
   vars:
     uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.3.3652.1"}
     uft_extension_id: hpoiplhbnkgnpjkkilfahkkcimachkkj
+    uft_firefox_extension_id: ec8030f7-c20a-464f-9b0e-13a3a9e97384
     chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
 
@@ -321,19 +322,19 @@
       src: id_rsa.pub
       dest: /root/.ssh
       mode: 644
-  - name: Set authorized key for demo
+  - name: Set authorized key for demo user
     authorized_key:
       user: demo
       state: present
       key: '{{ pubkey }}'
-  - name: Copy id_rsa into ssh directory for root
+  - name: Copy id_rsa into ssh directory for demo user
     copy:
       remote_src: true
       src: id_rsa
       dest: /home/demo/.ssh
       owner: demo
       mode: 600
-  - name: Copy id_rsa.pub into ssh directory for root
+  - name: Copy id_rsa.pub into ssh directory for demo user
     copy:
       remote_src: true
       src: id_rsa.pub
@@ -343,3 +344,9 @@
   - name: Install filezilla
     yum:
       name: filezilla
+  - name: Copy Firefox Launcher to Desktop
+    copy:
+      src: /usr/share/applications/firefox.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
