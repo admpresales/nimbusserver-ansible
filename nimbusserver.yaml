@@ -213,14 +213,20 @@
       status_code: 200,304
   - name: Create plugin details for UFT Extension
     copy: content="{{ uft_extension_details }}" dest=/opt/google/chrome/extensions/{{ uft_extension_id }}.json
+  - name: Copy Bookmarks to archive
+    copy:
+      src: chrome-bookmarks.html
+      dest: /opt/google/chrome/archive/chrome-bookmarks.html
+      mode: 0755
+      owner: demo
   - name: Copy Chrome Launcher to Desktop
     copy:
       src: /usr/share/applications/google-chrome.desktop
       dest: /home/demo/Desktop
       mode: 0755
       owner: demo
-  - name: Make Chrome Launcher Trusted
-    shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
+  #- name: Make Chrome Launcher Trusted
+  #  shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
 
   - name: Configure Docker Community Edition yum repository
     get_url:
