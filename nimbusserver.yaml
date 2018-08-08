@@ -300,7 +300,9 @@
     authorized_key:
       user: root
       state: present
-      key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+      key: '{{ item }}'
+    with_file:
+      - /root/.ssh/id_rsa.pub
     become: yes
     become_user: root
   - name: Install filezilla
