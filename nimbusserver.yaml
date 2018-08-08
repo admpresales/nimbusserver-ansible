@@ -301,6 +301,8 @@
       user: root
       state: present
       key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+    become: yes
+    become_user: root
   - name: Install filezilla
     yum:
       name: filezilla
