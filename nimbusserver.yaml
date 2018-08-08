@@ -305,10 +305,10 @@
     become: yes
     become_user: root
   - name: Create SSH directory for root
-      file:
-        path: /root/.ssh
-        state: directory
-        mode: 0777
+    file:
+      path: /root/.ssh
+      state: directory
+      mode: 0777
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
