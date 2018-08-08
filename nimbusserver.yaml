@@ -293,7 +293,7 @@
   - name: Copy id_rsa.pub into ssh directory for root
     copy:
       remote_src: true
-      src: id_rsa
+      src: id_rsa.pub
       dest: /root/.ssh
       mode: 644
   - name: Set authorized key for root
