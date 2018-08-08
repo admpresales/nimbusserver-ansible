@@ -2,7 +2,16 @@
   remote_user: root
   become: yes
 
+  vars:
+    uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.3.3652.1"}
+    uft_extension_id: hpoiplhbnkgnpjkkilfahkkcimachkkj
+    chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
+
+
   tasks:
+  - name: Set Hostname to nimbusserver
+    hostname:
+      name: nimbusserver
   - name: Install Gnome Desktop
     yum:
       name: "@^GNOME Desktop"
@@ -26,7 +35,17 @@
   - name: Add the 'demo' user
     user:
       name: demo
+      state: present
       comment: Nimbus Demo User
+      groups: "demo, wheel, docker"
+      append: yes
+  - name: Allow 'wheel' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: visudo -cf %s
   - name: Set password for demo user
     shell: echo demo:Password1 | sudo chpasswd
     no_log: True
@@ -165,11 +184,44 @@
       path: /etc/opt/chrome/policies/managed
       state: directory
       mode: 0755
-  - name: Create managed policies directory for chrome
+  - name: Create recommended policies directory for chrome
     file:
       path: /etc/opt/chrome/policies/recommended
       state: directory
       mode: 0755
+  - name: Create external extensions directory for chrome
+    file:
+      path: /opt/google/chrome/extensions
+      state: directory
+      mode: 0755
+  - name: Create archive directory for extensions
+    file:
+      path: /opt/google/chrome/archive
+      state: directory
+      mode: 0755
+  - name: Copy master preferences file for Chrome into Chrome
+    copy:
+      remote_src: true
+      src: master_preferences
+      dest: /opt/google/chrome/master_preferences
+  - name: Copy password manager policy into Chrome recommended policies
+    copy: content="{{ chrome_password_manager_policy }}" dest=/etc/opt/chrome/policies/recommended/password_policy.json
+  - name: Get UFT Extension
+    uri:
+      url: https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&x=id%3D{{ uft_extension_id }}%26installsource%3Dondemand%26uc
+      dest: /opt/google/chrome/archive/uft.crx
+      status_code: 200,304
+  - name: Create plugin details for UFT Extension
+    copy: content="{{ uft_extension_details }}" dest=/opt/google/chrome/extensions/{{ uft_extension_id }}.json
+  - name: Copy Chrome Launcher to Desktop
+    copy:
+      src: /usr/share/applications/google-chrome.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
+  - name: Make Chrome Launcher Trusted
+    shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
+
   - name: Configure Docker Community Edition yum repository
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo

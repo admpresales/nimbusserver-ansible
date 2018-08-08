@@ -1,0 +1,32 @@
+{
+  "homepage" : "about:blank",
+  "homepage_is_newtabpage" : false,
+  "browser" : {
+    "show_home_button" : true,
+    "check_default_browser" : false
+  },
+  "bookmark_bar" : {
+    "show_on_all_tabs" : true,
+    "show_apps_shortcut" : false
+  },
+  "distribution" : {
+    "skip_first_run_ui" : true,
+    "show_welcome_page" : false,
+    "import_search_engine" : false,
+    "import_history" : false,
+    "import_bookmarks" : false,
+    "suppress_first_run_bubble" : true,
+    "create_all_shortcuts" : false,
+    "do_not_launch_chrome" : true,
+    "do_not_create_desktop_shortcut" : true,
+    "do_not_create_quick_launch_shortcut" : true,
+    "make_chrome_default" : true
+  },
+  "first_run_tabs" : [
+    "about:blank"
+  ],
+  "sync_promo" : {
+    "user_skipped" : true,
+    "show_on_first_run_allowed" : false
+  }
+}
