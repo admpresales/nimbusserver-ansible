@@ -350,3 +350,13 @@
       dest: /home/demo/Desktop
       mode: 0755
       owner: demo
+  - name: Copy local-settings to Firefox default directory
+    copy:
+      src: local-settings.js
+      dest: /usr/lib64/firefox/defaults/pref
+      mode: 0755
+  - name: Copy mozilla.cfg to Firefox install directory
+    copy:
+      src: local-settings.js
+      dest: /usr/lib64/firefox/defaults/pref
+      mode: 0755
