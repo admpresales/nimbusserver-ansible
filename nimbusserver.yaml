@@ -208,14 +208,14 @@
       dest: /opt/google/chrome/master_preferences
   - name: Copy password manager policy into Chrome recommended policies
     copy: content="{{ chrome_password_manager_policy }}" dest=/etc/opt/chrome/policies/recommended/password_policy.json
-  - name: Get UFT Extension
+  - name: Get UFT Extension for Chrome
     uri:
       url: https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&x=id%3D{{ uft_extension_id }}%26installsource%3Dondemand%26uc
       dest: /opt/google/chrome/archive/uft.crx
       status_code: 200,304
-  - name: Create plugin details for UFT Extension
+  - name: Create plugin details for UFT Extension for Chrome
     copy: content="{{ uft_extension_details }}" dest=/opt/google/chrome/extensions/{{ uft_extension_id }}.json
-  - name: Copy Bookmarks to archive
+  - name: Copy Chrome Bookmarks to archive
     copy:
       src: chrome-bookmarks.html
       dest: /opt/google/chrome/archive/chrome-bookmarks.html
@@ -358,5 +358,5 @@
   - name: Copy mozilla.cfg to Firefox install directory
     copy:
       src: mozilla.cfg
-      dest: /usr/lib64/firefox
+      dest: /usr/lib64/firefox/mozilla.cfg
       mode: 0644
