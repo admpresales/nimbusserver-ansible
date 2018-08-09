@@ -354,9 +354,9 @@
     copy:
       src: local-settings.js
       dest: /usr/lib64/firefox/defaults/pref
-      mode: 0755
+      mode: 0644
   - name: Copy mozilla.cfg to Firefox install directory
     copy:
       src: local-settings.js
       dest: /usr/lib64/firefox/defaults/pref
-      mode: 0755
+      mode: 0644
