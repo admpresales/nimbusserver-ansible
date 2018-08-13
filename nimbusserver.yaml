@@ -136,7 +136,7 @@
       dconf: key="/org/gnome/nautilus/preferences/default-sort-order" value="'type'" state=present
     - name: Get default terminal profile
       dconf:
-        key: "/org/gnome/terminal/legacy/profiles:/"
+        key: "/org/gnome/terminal/legacy/profiles:"
         state: read
       register: default_profile_gui
     - name: Terminal Settings - Set default columns to 132
