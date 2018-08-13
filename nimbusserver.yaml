@@ -41,7 +41,7 @@
       state: present
       comment: Nimbus Demo User
       groups: "demo, wheel, docker"
-      password: {{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}
+      password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
       append: yes
   - name: Allow 'wheel' group to have passwordless sudo
     lineinfile:
