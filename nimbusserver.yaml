@@ -41,6 +41,7 @@
       state: present
       comment: Nimbus Demo User
       groups: "demo, wheel, docker"
+      password: {{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}
       append: yes
   - name: Allow 'wheel' group to have passwordless sudo
     lineinfile:
@@ -49,9 +50,9 @@
       regexp: '^%wheel'
       line: '%wheel ALL=(ALL) NOPASSWD: ALL'
       validate: visudo -cf %s
-  - name: Set password for demo user
-    shell: echo demo:Password1 | sudo chpasswd
-    no_log: True
+#  - name: Set password for demo user
+#    shell: echo demo:Password1 | sudo chpasswd
+#    no_log: True
   - name: Stop and disable firewalld
     service: name=firewalld enabled=no state=stopped
   - name: Disable SELinux
@@ -231,7 +232,7 @@
       dest: /opt/google/chrome/archive/chrome-bookmarks.html
       mode: 0755
       owner: demo
-  - name: Change Execution Statement for LeanFT Viewer
+  - name: Added silent debugging flag to Chrome launcher
     lineinfile:
       path: /usr/share/applications/google-chrome.desktop
       regexp: '^Exec='
