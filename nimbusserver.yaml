@@ -401,13 +401,8 @@
 
   - name: Copy gnome-terminal launcher to desktop
     copy:
-      src: /usr/share/applications/gnome-terminal.desktop
+      src: /usr/share/applications/org.gnome.Terminal.desktop
       dest: /home/demo/Desktop
       mode: 0755
       owner: demo
       group: demo
-  - name: Change Execution Statement for gnome-terminal
-    lineinfile:
-      path: /home/demo/Desktop/vinagre.desktop
-      regexp: '^Exec='
-      line: 'Exec=vinagre ::5900'
