@@ -118,7 +118,7 @@
 
     - name: Mute speaker volume
       shell: amixer set Master mute
-      when: "{{speaker_status}}=false"
+      when: speaker_status == 1
 
     - name: Set Desktop Background Properties - Shading Type
       dconf: key="/org/gnome/desktop/background/color-shading-type" value="'solid'" state=present
