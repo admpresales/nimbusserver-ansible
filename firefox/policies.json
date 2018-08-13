@@ -2,16 +2,31 @@
   "policies": {
     "Bookmarks": [
       {
-        "Placement": "toolbar",
+        "Placement": "AOS",
         "Title": "Bookmark",
-        "URL": "www.google.com"
+        "URL": "http://nimbusserver.aos.com:8000/#/"
+      },
+      {
+        "Placement": "Jenkins",
+        "Title": "Bookmark",
+        "URL": "http://nimbusserver:8090"
+      },
+      {
+        "Placement": "Octane",
+        "Title": "Bookmark",
+        "URL": "http://http://nimbusserver.aos.com:8085/ui"
+      },
+      {
+        "Placement": "Docker Hub",
+        "Title": "Bookmark",
+        "URL": "https://hub.docker.com"
       }
     ],
     "NoDefaultBookmarks": true,
     "DisplayBookmarksToolbar": true,
     "Extensions": {
       "Install": [
-        "//usr/lib64/firefox/distribution/extensions/leanft.xpi"
+        "//usr/lib64/firefox/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
       ]
     }
   }
