@@ -7,4 +7,3 @@ g.	delete other extensions why? – Deleting the default icons stops pdf’s for
 Following Tasks are NOT Idempotent
 TASK [Change name of vinagre icon to LeanFT Viewer]
 TASK [Mute speaker volume]
-TASK [Set password for demo user]
