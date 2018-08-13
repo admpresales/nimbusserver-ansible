@@ -134,6 +134,15 @@
       dconf: key="/org/gtk/settings/file-chooser/sort-directories-first" value="true" state=present
     - name: Icon Settings - Sort By set to 'Type'
       dconf: key="/org/gnome/nautilus/preferences/default-sort-order" value="'type'" state=present
+    - name: Get default terminal profile
+      dconf:
+        key: "/org/gnome/terminal/legacy/profiles:/"
+        state: read
+      register: default_profile_gui
+    - name: Terminal Settings - Set default columns to 132
+      dconf: key="dconf write /org/gnome/terminal/legacy/profiles:/{{ default_profile_gui }}/default-size-columns" value="132" state=present
+    - name: Terminal Settings - Set default rows to 40
+      dconf: key="dconf write /org/gnome/terminal/legacy/profiles:/{{ default_profile_gui }}/default-size-rows" value="40" state=present
     become: yes
     become_user: demo
 
@@ -269,10 +278,10 @@
     uri:
       url: https://api.github.com/repos/docker/app/releases
       return_content: true
-    register: json_reponse
+    register: dockerapp_json_reponse
   - name: Download docker-app
     unarchive:
-      src: "https://github.com/docker/app/releases/download/{{ json_reponse.json[0].name }}/docker-app-linux.tar.gz"
+      src: "https://github.com/docker/app/releases/download/{{ dockerapp_json_reponse.json[0].name }}/docker-app-linux.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
   - name: Rename docker-app binary and set group ownership to docker
@@ -384,7 +393,20 @@
       path: /home/demo/Desktop/vinagre.desktop
       regexp: '^Name[en_US]='
       line: 'Name[en_US]=LeanFT Viewer'
-  - name:
+  - name: Change Execution Statement for LeanFT Viewer
+    lineinfile:
+      path: /home/demo/Desktop/vinagre.desktop
+      regexp: '^Exec='
+      line: 'Exec=vinagre ::5900'
+
+  - name: Copy gnome-terminal launcher to desktop
+    copy:
+      src: /usr/share/applications/gnome-terminal.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
+      group: demo
+  - name: Change Execution Statement for gnome-terminal
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
       regexp: '^Exec='
