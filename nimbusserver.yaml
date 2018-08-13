@@ -367,14 +367,10 @@
       src: firefox/policies.json
       dest: "{{ firefox_install_dir }}/distribution/policies.json"
       mode: 0644
-  - name: Copy LeanFT addon to Firefox install directory
+  - name: Copy LeanFT extension to Firefox extensions directory
     copy:
       src: firefox/FT.FirefoxAgent@microfocus.com.xpi
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
-  - name: Add Bookmark Bar showing up by default in firefox
-    lineinfile:
-      dest: "{{ firefox_install_dir }}/distribution/distribution.ini"
-      line: browser.showPersonalToolbar=true
 
   - name: Copy vinagre launcher to desktop
     copy:
@@ -383,3 +379,8 @@
       mode: 0755
       owner: demo
       group: demo
+  - name: Change name of icon
+    lineinfile:
+      path: /home/demo/Desktop
+      regexp: '^Name[en_US]='
+      line: 'Name[en_US]=LeanFT Viewer'
