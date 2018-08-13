@@ -2,23 +2,23 @@
   "policies": {
     "Bookmarks": [
       {
-        "Placement": "AOS",
-        "Title": "Bookmark",
+        "Placement": "toolbar",
+        "Title": "AOS",
         "URL": "http://nimbusserver.aos.com:8000/#/"
       },
       {
-        "Placement": "Jenkins",
-        "Title": "Bookmark",
+        "Placement": "toolbar",
+        "Title": "Jenkins",
         "URL": "http://nimbusserver:8090"
       },
       {
-        "Placement": "Octane",
-        "Title": "Bookmark",
+        "Placement": "toolbar",
+        "Title": "Octane",
         "URL": "http://http://nimbusserver.aos.com:8085/ui"
       },
       {
-        "Placement": "Docker Hub",
-        "Title": "Bookmark",
+        "Placement": "toolbar",
+        "Title": "Docker Hub",
         "URL": "https://hub.docker.com"
       }
     ],
