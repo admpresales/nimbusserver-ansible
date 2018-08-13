@@ -381,6 +381,6 @@
       group: demo
   - name: Change name of icon
     lineinfile:
-      path: /home/demo/Desktop
+      path: /home/demo/Desktop/vinagre.desktop
       regexp: '^Name[en_US]='
       line: 'Name[en_US]=LeanFT Viewer'
