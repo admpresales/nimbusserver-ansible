@@ -406,3 +406,21 @@
       mode: 0755
       owner: demo
       group: demo
+
+  - name: Copy nautalis (Files) launcher to desktop
+    copy:
+      src: /usr/share/applications/org.gnome.Nautilus.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
+      group: demo
+
+  - name: Copy system monitor launcher to desktop
+    copy:
+      src: /usr/share/applications/gnome-system-monitor.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
+      group: demo
+
+
