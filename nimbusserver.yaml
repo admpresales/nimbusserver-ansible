@@ -414,7 +414,7 @@
   - name: Copy vinagre launcher to desktop
     copy:
       src: /usr/share/applications/vinagre.desktop
-      dest: /home/demo/Desktop
+      dest: /home/demo/Desktop/vinagre.desktop
       mode: 0755
       owner: demo
       group: demo
@@ -433,7 +433,7 @@
   - name: Copy gnome-terminal launcher to desktop
     copy:
       src: /usr/share/applications/org.gnome.Terminal.desktop
-      dest: /home/demo/Desktop
+      dest: /home/demo/Desktop/org.gnome.Terminal.desktop
       mode: 0755
       owner: demo
       group: demo
@@ -441,7 +441,7 @@
   - name: Copy nautalis (Files) launcher to desktop
     copy:
       src: /usr/share/applications/org.gnome.Nautilus.desktop
-      dest: /home/demo/Desktop
+      dest: /home/demo/Desktop/org.gnome.Nautilus.desktop
       mode: 0755
       owner: demo
       group: demo
@@ -449,7 +449,7 @@
   - name: Copy system monitor launcher to desktop
     copy:
       src: /usr/share/applications/gnome-system-monitor.desktop
-      dest: /home/demo/Desktop
+      dest: /home/demo/Desktop/gnome-system-monitor.desktop
       mode: 0755
       owner: demo
       group: demo
