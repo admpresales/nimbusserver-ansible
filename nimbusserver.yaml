@@ -231,12 +231,19 @@
       dest: /opt/google/chrome/archive/chrome-bookmarks.html
       mode: 0755
       owner: demo
+  - name: Change Execution Statement for LeanFT Viewer
+    lineinfile:
+      path: /usr/share/applications/google-chrome.desktop
+      regexp: '^Exec='
+      line: 'Exec=/usr/bin/google-chrome-stable %U --silent-debugger-extension-api'
+
   - name: Copy Chrome Launcher to Desktop
     copy:
       src: /usr/share/applications/google-chrome.desktop
       dest: /home/demo/Desktop
       mode: 0755
       owner: demo
+
   #- name: Make Chrome Launcher Trusted
   #  shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
 

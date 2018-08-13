@@ -3,3 +3,8 @@ c.	Enable chrome://flags for silent debugging – (Add to start flags)
 g.	delete other extensions why? – Deleting the default icons stops pdf’s form being opened in chrome in theory. Is there something specific we don’t like?
 18.	Add --password-store=basic before the %U on the /usr/share/applications/google-chrome.desktop file – Seems redundant since passwords are disabled by step 11h
 23.	 cat /dev/null > ~/.bash_history && history -c && exit - not sure how exactly how to implement this..this would clear out root's history.
+
+Following Tasks are NOT Idempotent
+TASK [Change name of vinagre icon to LeanFT Viewer]
+TASK [Mute speaker volume]
+TASK [Set password for demo user]
