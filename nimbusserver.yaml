@@ -47,6 +47,13 @@
       groups: "demo, wheel"
       password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
       append: yes
+  - name: Create desktop directory for demo
+    file:
+      path: /home/demo/Desktop
+      state: directory
+      mode: 0755
+      owner: demo
+      group: demo
   - name: Allow 'wheel' group to have passwordless sudo
     lineinfile:
       dest: /etc/sudoers
@@ -75,6 +82,8 @@
       path: /home/demo/.cache/vmware/drag_and_drop
       state: directory
       mode: 0777
+      owner: demo
+      group: demo
   - name: Install Nimbus YUM packages
     yum:
       name: "{{ packages }}"
@@ -401,6 +410,9 @@
     copy:
       src: firefox/FT.FirefoxAgent@microfocus.com.xpi
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
+
+  - name: Make Desktop directory for demo
+
 
   - name: Copy vinagre launcher to desktop
     copy:
