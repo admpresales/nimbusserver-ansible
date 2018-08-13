@@ -432,7 +432,8 @@
       group: demo
 
   - name: Setup automatic login for demo
-    line: "AutomaticLogin=demo/nAutomaticLoginEnable=True"
+    lineinfile:
+      line: "AutomaticLogin=demo/nAutomaticLoginEnable=True"
       path: /etc/gdm/custom.conf
       insertafter: '^\[daemon\]'
       state: present
