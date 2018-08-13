@@ -118,7 +118,7 @@
       failed_when:  "speaker_status == 2"
 
     - debug:
-          msg: "{{speaker_status}}"
+        msg: "{{speaker_status}}"
 
     - name: Mute speaker volume
       shell: amixer set Master mute
