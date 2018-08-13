@@ -1,0 +1,18 @@
+{
+  "policies": {
+    "Bookmarks": [
+      {
+        "Placement": "toolbar",
+        "Title": "Bookmark",
+        "URL": "www.google.com"
+      }
+    ],
+    "NoDefaultBookmarks": true,
+    "DisplayBookmarksToolbar": true,
+    "Extensions": {
+      "Install": [
+        "//usr/lib64/firefox/distribution/extensions/leanft.xpi"
+      ]
+    }
+  }
+}
