@@ -39,6 +39,10 @@
     group:
       name: demo
       state: present
+  - name: Create "docker" group
+    group:
+      name: docker
+      state: present
   - name: Add the 'demo' user
     user:
       name: demo
