@@ -14,12 +14,72 @@
       {
         "Placement": "toolbar",
         "Title": "Octane",
-        "URL": "http://http://nimbusserver.aos.com:8085/ui"
+        "URL": "http://nimbusserver.aos.com:8085/ui"
       },
       {
         "Placement": "toolbar",
         "Title": "Docker Hub",
         "URL": "https://hub.docker.com"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Agile Manager",
+        "URL": "http://nimbusserver.aos.com:8083/agm/login",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "ALM .NET",
+        "URL": "http://nimbusserver.aos.com:8082/qcbin",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "AutoPass",
+        "URL": "https://nimbusserver.aos.com:5814/autopass",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Deployment Automation",
+        "URL": "http://nimbusserver.aos.com:8089/da/login",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "SSC",
+        "URL": "http://nimbusserver.aos.com:8086/ssc/#/",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Fortify SSC",
+        "URL": "http://nimbusserver.aos.com:8086/ssc/#/",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Mobile Center",
+        "URL": "http://nimbusserver.aos.com:8084/integration/#/login",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Network Virtualization",
+        "URL": "http://nimbusserver.aos.com:8182/shunra/auth/login",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Project and Portfolio Management",
+        "URL": "http://nimbusserver.aos.com:8087",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "Service Virtualization",
+        "URL": "https://nimbusserver.aos.com:6085/management",
+        "Folder": "ADM Products"
       }
     ],
     "NoDefaultBookmarks": true,
