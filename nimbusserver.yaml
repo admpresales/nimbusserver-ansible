@@ -115,10 +115,8 @@
     - name: Get current speaker state
       shell: amixer get Master | grep -q off;
       register: speaker_status
-      failed_when:  "speaker_status == 2"
-
-    - debug:
-        msg: "{{speaker_status.rc}}"
+      failed_when:  "speaker_status.rc == 2"
+      changed_when: false
 
     - name: Mute speaker volume
       shell: amixer set Master mute
