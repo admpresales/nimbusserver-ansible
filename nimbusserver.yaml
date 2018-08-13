@@ -388,6 +388,7 @@
       mode: 0755
       owner: demo
       group: demo
+      force: no
   - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
@@ -433,9 +434,16 @@
 
   - name: Setup automatic login for demo
     lineinfile:
-      line: "AutomaticLogin=demo\nAutomaticLoginEnable=True"
+      line: "AutomaticLogin=demo"
       path: /etc/gdm/custom.conf
       insertafter: '^\[daemon\]'
+      state: present
+
+  - name: Setup automatic login for demo
+    lineinfile:
+      line: "AutomaticLoginEnable=True"
+      path: /etc/gdm/custom.conf
+      insertafter: '^AutomaticLogin=demo'
       state: present
 
 
