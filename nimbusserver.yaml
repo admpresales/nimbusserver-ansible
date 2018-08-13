@@ -117,9 +117,12 @@
       register: speaker_status
       failed_when:  "speaker_status == 2"
 
+    - debug:
+          msg: "{{speaker_status}}"
+
     - name: Mute speaker volume
       shell: amixer set Master mute
-      when: speaker_status == 1
+      when: {{ speaker_status == 1 }}
 
     - name: Set Desktop Background Properties - Shading Type
       dconf: key="/org/gnome/desktop/background/color-shading-type" value="'solid'" state=present
