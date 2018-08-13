@@ -35,6 +35,10 @@
     systemd:
       name: packagekit.service
       masked: yes
+  - name: Create "demo" group
+    group:
+      name: demo
+      state: present
   - name: Add the 'demo' user
     user:
       name: demo
