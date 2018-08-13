@@ -345,6 +345,7 @@
   - name: Install filezilla
     yum:
       name: filezilla
+
   - name: Copy Firefox Launcher to Desktop
     copy:
       src: /usr/share/applications/firefox.desktop
@@ -374,3 +375,11 @@
     lineinfile:
       dest: "{{ firefox_install_dir }}/distribution/distribution.ini"
       line: browser.showPersonalToolbar=true
+
+  - name: Copy vinagre launcher to desktop
+    copy:
+      src: /usr/share/applications/vinagre.desktop
+      dest: /home/demo/Desktop
+      mode: 0755
+      owner: demo
+      group: demo
