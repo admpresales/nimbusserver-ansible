@@ -379,8 +379,13 @@
       mode: 0755
       owner: demo
       group: demo
-  - name: Change name of icon
+  - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
       regexp: '^Name[en_US]='
       line: 'Name[en_US]=LeanFT Viewer'
+  - name:
+    lineinfile:
+      path: /home/demo/Desktop/vinagre.desktop
+      regexp: '^Exec='
+      line: 'Exec=vinagre ::5900'
