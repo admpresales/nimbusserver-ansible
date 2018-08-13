@@ -411,9 +411,6 @@
       src: firefox/FT.FirefoxAgent@microfocus.com.xpi
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
 
-  - name: Make Desktop directory for demo
-
-
   - name: Copy vinagre launcher to desktop
     copy:
       src: /usr/share/applications/vinagre.desktop
