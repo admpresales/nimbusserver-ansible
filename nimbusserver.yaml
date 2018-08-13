@@ -111,8 +111,15 @@
       dconf: key="/org/gnome/desktop/interface/clock-show-date" value="true" state=present
     - name: Configure Gnome Tweak Tool - Set Number of Workspaces to 1
       dconf: key="/org/gnome/desktop/wm/preferences/num-workspaces" value="1" state=present
+
+    - name: Get current speaker state
+      shell: amixer get Master | grep -q off;
+      register: speaker_status
+
     - name: Mute speaker volume
       shell: amixer set Master mute
+      when: "{{speaker_status}}=false"
+
     - name: Set Desktop Background Properties - Shading Type
       dconf: key="/org/gnome/desktop/background/color-shading-type" value="'solid'" state=present
     - name: Set Desktop Background Properties - Picture Option
