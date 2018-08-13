@@ -113,9 +113,8 @@
       dconf: key="/org/gnome/desktop/wm/preferences/num-workspaces" value="1" state=present
 
     - name: Get current speaker state
-      shell: amixer get Master | grep -q off;
+      shell: amixer get Master | grep -q off; | cat
       register: speaker_status
-      ignore_errors: True
 
     - name: Mute speaker volume
       shell: amixer set Master mute
