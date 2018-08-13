@@ -1,0 +1,41 @@
+NimbusServer Build Process
+
+1.	Download CentOS 7 DVD ISO from one of the mirror sites
+2.	Run the VMware Workstation New Virtual Machine Wizard
+    a.	Select Typical (recommended) configuration
+    b.	Select Installer disc image file (ISO)
+    c.	Enter NimbusServer as the virtual machine name
+    d.	Enter 300 as the Maximum disk size (GB) and select Split virtual disk into multiple files
+    e.	Customize the VM hardware settings:
+        i.	10GB memory
+        ii.	1 processor with 4 processor cores
+        iii.	Remove the Sound Card and Printer
+    f.	Close the window, check Power on this virtual machine after creation and click Finish
+    g.	Run the installation process
+        i.	Set correct values for Language, along with Date & Time
+        ii.	Within Software Selection, select GNOME Desktop
+        iii.	Within Installation Destination select I will configure partitioning
+        iv.	Within Manual Partitioning click Click here to create them automatically
+            1.	Change cl-home to 30.12 GiB
+            2.	Change cl-root to 264 GiB
+            3.	Click Done and Accept changes
+        v.	Within Network & Host Name, set the host name to nimbusserver  and turn on the NAT network
+        vi.	Click Begin Installation
+        vii.	Set the Root Password to Password1
+        viii.	Click on User Creation
+            1.	Full name: demo
+            2.	User name: demo
+            3.	Check the box for Make this user administrator
+            4.	Password: Password1
+        ix.	Click Reboot when prompted
+        x.	Accept license information
+        xi.	Click Finish Configuration
+        xii.	Log in and click through final configuration screens
+        xiii.	On VMware Workstation, click on I Finished Installing
+        xxii.	Move the disk images to a VMDK subfolder
+                    1.	Create a VMDK folder
+                    2.	C:\"Program Files (x86)"\VMware\"VMware Workstation"\vmware-vdiskmanager.exe -n C:\NimbusServer\NimbusServer.vmdk C:\NimbusServer\VMDK\NimbusServer.vmdk
+                    3.	Add fileSearchPath = ".\VMDK;." to the NimbusServer.vmx file
+                    4.	Cycle the virtual machine
+24.	Set memory, processors and virtual machine name
+
