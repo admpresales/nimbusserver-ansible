@@ -115,6 +115,7 @@
     - name: Get current speaker state
       shell: amixer get Master | grep -q off;
       register: speaker_status
+      ignore_errors: True
 
     - name: Mute speaker volume
       shell: amixer set Master mute
