@@ -257,7 +257,7 @@
   - name: Added silent debugging flag to Chrome launcher
     replace:
       path: /usr/share/applications/google-chrome.desktop
-      regexp: '^Exec=*\n'
+      regexp: '^Exec=\/usr\/bin\/google-chrome-stable %U'
       replace: 'Exec=/usr/bin/google-chrome-stable --password-store=basic %U --silent-debugger-extension-api'
       backup: yes
   - name: Copy Chrome Launcher to Desktop
