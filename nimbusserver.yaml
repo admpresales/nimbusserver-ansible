@@ -497,14 +497,14 @@
       remote_src: true
       src: trustdesktop.sh
       dest: /opt/nimbus/scripts/trustdesktop.sh
-      mode: 755
+      mode: 0755
 
   - name: Copy desktop script into nimbus scripts
     copy:
       remote_src: true
       src: trustdesktop.desktop
       dest: /home/demo/.config/autostart/trustdesktop.desktop
-      mode: 755
+      mode: 0755
       owner: demo
       group: demo
 
