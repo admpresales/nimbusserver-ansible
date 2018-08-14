@@ -476,6 +476,39 @@
       insertafter: '^AutomaticLogin=demo'
       state: present
 
+  - name: Create autostart directory for demo
+    file:
+      path: /home/demo/.config/autostart
+      state: directory
+      mode: 0755
+      owner: demo
+      group: demo
+
+  - name: Create nimbus script directory
+    file:
+      path: /opt/nimbus/scripts
+      state: directory
+      mode: 0755
+      owner: root
+      group: wheel
+
+  - name: Copy desktop script into nimbus scripts
+    copy:
+      remote_src: true
+      src: trustdesktop.sh
+      dest: /opt/nimbus/scripts/trustdesktop.sh
+      mode: 755
+
+  - name: Copy desktop script into nimbus scripts
+    copy:
+      remote_src: true
+      src: trustdesktop.desktop
+      dest: /home/demo/.config/autostart/trustdesktop.desktop
+      mode: 755
+      owner: demo
+      group: demo
+
+
 
 
 

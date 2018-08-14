@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name="trustdesktop"
+GenericName="trustdesktop"
+Comment="Grant trust permission to desktop icons"
+Exec=/opt/nimbus/scripts/trustdesktop.sh
+Terminal=false
+Type=Application
+X-Gnome-Autostart=true
