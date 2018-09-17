@@ -66,6 +66,13 @@
 #  - name: Set password for demo user
 #    shell: echo demo:Password1 | sudo chpasswd
 #    no_log: True
+  - name: Create .config directory for demo
+    file:
+      path: /home/demo/.config
+      state: directory
+      mode: 0755
+      owner: demo
+      group: demo
   - name: Add initial setup file to demo user's home directory
     copy: content="yes" dest=/home/demo/.config/gnome-initial-setup-done
   - name: Stop and disable firewalld
