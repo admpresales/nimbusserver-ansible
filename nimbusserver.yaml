@@ -66,6 +66,8 @@
 #  - name: Set password for demo user
 #    shell: echo demo:Password1 | sudo chpasswd
 #    no_log: True
+  - name: Add initial setup file to demo user's home directory
+    copy: content="yes" dest=/home/demo/.config/gnome-initial-setup-done
   - name: Stop and disable firewalld
     service: name=firewalld enabled=no state=stopped
   - name: Disable SELinux
