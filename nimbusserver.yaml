@@ -142,6 +142,7 @@
       failed_when:  "speaker_status.rc == 2"
       changed_when: false
 
+#TODO: Make this idempotent
     - name: Mute speaker volume
       shell: amixer set Master mute
       when: speaker_status.rc == 1
@@ -434,6 +435,7 @@
       owner: demo
       group: demo
 
+#TODO: Make this step idempotent
   - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
@@ -531,7 +533,7 @@
 
   - name: Download nimbusapp
     unarchive:
-      src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusappapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
+      src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
 
