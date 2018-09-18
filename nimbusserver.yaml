@@ -533,14 +533,14 @@
       owner: root
       group: wheel
 
-    - name: Copy autostart script into demo user's autostart directory
-      copy:
-        remote_src: true
-        src: quickstart.html
-        dest: /home/demo/.config/autostart/trustdesktop.desktop
-        mode: 0755
-        owner: demo
-        group: demo
+  - name: Copy autostart script into demo user's autostart directory
+    copy:
+      remote_src: true
+      src: quickstart.html
+      dest: /home/demo/.config/autostart/trustdesktop.desktop
+      mode: 0755
+      owner: demo
+      group: demo
 
   - name: Get latest release info for nimbusapp
     uri:
