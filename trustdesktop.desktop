@@ -6,3 +6,4 @@ Exec=/opt/nimbus/scripts/trustdesktop.sh
 Terminal=false
 Type=Application
 X-Gnome-Autostart=true
+hidden=false
