@@ -531,7 +531,7 @@
 
   - name: Download nimbusapp
     unarchive:
-      src: "https://github.com/docker/app/releases/download/{{ dockerapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
+      src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusappapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
 
