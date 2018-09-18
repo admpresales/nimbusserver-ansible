@@ -523,6 +523,18 @@
       owner: demo
       group: demo
 
+  - name: Get latest release info for nimbusapp
+      uri:
+        url: https://api.github.com/repos/admpresales/nimbusapp/releases
+        return_content: true
+      register: nimbusapp_json_reponse
+
+  - name: Download nimbusapp
+    unarchive:
+      src: "https://github.com/docker/app/releases/download/{{ dockerapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
+      dest: /usr/local/bin
+      remote_src: yes
+
 
 
 
