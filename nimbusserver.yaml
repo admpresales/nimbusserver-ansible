@@ -537,10 +537,10 @@
     copy:
       remote_src: true
       src: quickstart.html
-      dest: /home/demo/.config/autostart/trustdesktop.desktop
+      dest: /opt/nimbus/docs/quickstart.html
       mode: 0755
-      owner: demo
-      group: demo
+      owner: root
+      group: wheel
 
   - name: Get latest release info for nimbusapp
     uri:
