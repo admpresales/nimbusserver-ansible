@@ -24,7 +24,7 @@
     "make_chrome_default" : true
   },
   "first_run_tabs" : [
-    "about:blank"
+    "file:///opt/nimbus/docs/quickstart.html"
   ],
   "sync_promo" : {
     "user_skipped" : true,
