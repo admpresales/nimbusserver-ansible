@@ -257,6 +257,8 @@
     copy: content="{{ chrome_metric_reporting_policy }}" dest=/etc/opt/chrome/policies/managed/metricreporting_policy.json
   - name: Copy popup policy into Chrome managed policies
     copy: content="{{ chrome_popup_policy }}" dest=/etc/opt/chrome/policies/managed/popup_policy.json
+  - name: Copy default browser policy into Chrome managed policies
+    copy: content="{ "DefaultBrowserSettingEnabled" : false }" dest=/etc/opt/chrome/policies/managed/defaultbrowser_policy.json
   - name: Get UFT Extension for Chrome
     uri:
       url: https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&x=id%3D{{ uft_extension_id }}%26installsource%3Dondemand%26uc
