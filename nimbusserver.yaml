@@ -524,10 +524,10 @@
       group: demo
 
   - name: Get latest release info for nimbusapp
-      uri:
-        url: https://api.github.com/repos/admpresales/nimbusapp/releases
-        return_content: true
-      register: nimbusapp_json_reponse
+    uri:
+      url: https://api.github.com/repos/admpresales/nimbusapp/releases
+      return_content: true
+    register: nimbusapp_json_reponse
 
   - name: Download nimbusapp
     unarchive:
