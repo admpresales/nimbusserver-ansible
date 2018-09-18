@@ -483,14 +483,6 @@
       owner: demo
       group: demo
 
-  - name: Copy README.md to Desktop
-    copy:
-      src: "Getting Started.txt"
-      dest: /home/demo/Desktop
-      mode: 0644
-      owner: demo
-      group: demo
-
   - name: Setup automatic login for demo
     lineinfile:
       line: "AutomaticLogin=demo"
