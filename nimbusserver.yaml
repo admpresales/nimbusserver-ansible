@@ -514,7 +514,7 @@
       dest: /opt/nimbus/scripts/trustdesktop.sh
       mode: 0755
 
-  - name: Copy desktop script into nimbus scripts
+  - name: Copy autostart script into demo user's autostart directory
     copy:
       remote_src: true
       src: trustdesktop.desktop
