@@ -11,6 +11,7 @@
     chrome_popup_policy: { "DefaultPopupsSetting" : 1 }
     chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
+    chrome_sync_policy: { "SyncDisabled" : true }
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
@@ -263,8 +264,10 @@
     copy: content="{{ chrome_popup_policy }}" dest=/etc/opt/chrome/policies/managed/popup.json
   - name: Copy default browser policy into Chrome managed policies
     copy: content="{{ chrome_default_browser_policy }}" dest=/etc/opt/chrome/policies/managed/defaultbrowser.json
-  - name: Copy new tab policy into Chrome managed policies
+  - name: Copy new tab policy into Chrome recommended policies
     copy: content="{{ chrome_newtab_policy }}" dest=/etc/opt/chrome/policies/recommended/newtab.json
+  - name: Copy sync policy into Chrome recommended policies
+    copy: content="{{ chrome_sync_policy }}" dest=/etc/opt/chrome/policies/recommended/sync.json
 
   - name: Get UFT Extension for Chrome
     uri:
