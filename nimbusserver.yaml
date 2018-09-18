@@ -529,6 +529,24 @@
       owner: demo
       group: demo
 
+  - name: Add default browser configuration to demo user
+    copy:
+      remote_src: true
+      src: config/mimeapps.list
+      dest: /home/demo/.config/mimeapps.list
+      mode: 0644
+      owner: demo
+      group: demo
+
+  - name: Add default resolution configuration to demo user
+    copy:
+      remote_src: true
+      src: config/monitors.xml
+      dest: /home/demo/.config/monitors.xml
+      mode: 0644
+      owner: demo
+      group: demo
+
   - name: Create nimbus documents directory
     file:
       path: /opt/nimbus/docs

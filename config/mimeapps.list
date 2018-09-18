@@ -1,0 +1,16 @@
+[Added Associations]
+text/html=firefox.desktop;google-chrome.desktop;
+text/xml=google-chrome.desktop;firefox.desktop;
+x-scheme-handler/https=google-chrome.desktop;firefox.desktop;
+
+[Default Applications]
+x-scheme-handler/http=google-chrome.desktop
+text/html=google-chrome.desktop
+text/xml=google-chrome.desktop
+application/xhtml_xml=google-chrome.desktop
+image/webp=google-chrome.desktop
+x-scheme-handler/https=google-chrome.desktop
+x-scheme-handler/ftp=google-chrome.desktop
+application/xhtml+xml=firefox.desktop
+application/vnd.mozilla.xul+xml=firefox.desktop
+text/mml=firefox.desktop
