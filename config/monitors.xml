@@ -13,8 +13,8 @@
                     <serial>unknown</serial>
                 </monitorspec>
                 <mode>
-                    <width>1360</width>
-                    <height>768</height>
+                    <width>1400</width>
+                    <height>900</height>
                     <rate>60.015163421630859</rate>
                 </mode>
             </monitor>
