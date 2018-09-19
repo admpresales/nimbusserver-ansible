@@ -177,9 +177,9 @@
       register: default_profile_gui
       changed_when: false
     - name: Terminal Settings - Set default columns to 132
-      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui }}/default-size-columns" value="132" state=present
+      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui.stdout }}/default-size-columns" value="132" state=present
     - name: Terminal Settings - Set default rows to 40
-      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui }}/default-size-rows" value="40" state=present
+      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui.stdout }}/default-size-rows" value="40" state=present
     become: yes
     become_user: demo
   #End Configuration Block
