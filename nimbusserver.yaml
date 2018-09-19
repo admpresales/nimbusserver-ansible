@@ -15,7 +15,6 @@
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
-
   tasks:
   - name: Set Hostname to nimbusserver
     hostname:
@@ -66,9 +65,7 @@
       regexp: '^%wheel'
       line: '%wheel ALL=(ALL) NOPASSWD: ALL'
       validate: visudo -cf %s
-#  - name: Set password for demo user
-#    shell: echo demo:Password1 | sudo chpasswd
-#    no_log: True
+
   - name: Create .config directory for demo
     file:
       path: /home/demo/.config
@@ -76,6 +73,7 @@
       mode: 0755
       owner: demo
       group: demo
+
   - name: Add initial setup file to demo user's home directory
     copy: content="yes" dest=/home/demo/.config/gnome-initial-setup-done
   - name: Stop and disable firewalld
@@ -116,6 +114,8 @@
   - name: Install psutil to support dconf changes
     pip:
       name: psutil
+
+  #Configuration block - need to become demo to perform these changes
   - block:
     - name: Configure Gnome Tweak Tool for Demo - Show Icons
       dconf: key="/org/gnome/desktop/background/show-desktop-icons" value="true" state=present
@@ -173,16 +173,16 @@
     - name: Icon Settings - Sort By set to 'Type'
       dconf: key="/org/gnome/nautilus/preferences/default-sort-order" value="'type'" state=present
     - name: Get default terminal profile
-      dconf:
-        key: "/org/gnome/terminal/legacy/profiles:"
-        state: read
+      shell: gsettings get org.gnome.Terminal.ProfilesList default | cut -d "'" -f 2
       register: default_profile_gui
+      changed_when: false
     - name: Terminal Settings - Set default columns to 132
-      dconf: key="/org/gnome/terminal/legacy/profiles:/{{ default_profile_gui }}/default-size-columns" value="132" state=present
+      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui }}/default-size-columns" value="132" state=present
     - name: Terminal Settings - Set default rows to 40
-      dconf: key="/org/gnome/terminal/legacy/profiles:/{{ default_profile_gui }}/default-size-rows" value="40" state=present
+      dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui }}/default-size-rows" value="40" state=present
     become: yes
     become_user: demo
+  #End Configuration Block
 
   - name: Install kernel-devel package for NV
     yum:
@@ -349,23 +349,13 @@
       dest: /usr/local/bin/docker-app
       group: docker
       mode: 0775
+
+  #Setup SSH for root
   - name: Create SSH directory for root
     file:
       path: /root/.ssh
       state: directory
       mode: 0777
-  - name: Copy id_rsa into ssh directory for root
-    copy:
-      remote_src: true
-      src: id_rsa
-      dest: /root/.ssh
-      mode: 600
-  - name: Copy id_rsa.pub into ssh directory for root
-    copy:
-      remote_src: true
-      src: id_rsa.pub
-      dest: /root/.ssh
-      mode: 644
   - name: Set authorized key for root
     authorized_key:
       user: root
@@ -373,23 +363,20 @@
       key: '{{ pubkey }}'
     become: yes
     become_user: root
-  - name: Set authorized key for root
-    authorized_key:
-      user: root
-      state: present
-      key: '{{ pubkey }}'
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
       src: id_rsa
       dest: /root/.ssh
-      mode: 600
+      mode: 0600
   - name: Copy id_rsa.pub into ssh directory for root
     copy:
       remote_src: true
       src: id_rsa.pub
       dest: /root/.ssh
-      mode: 644
+      mode: 0644
+
+  #Setup SSH for demo
   - name: Set authorized key for demo user
     authorized_key:
       user: demo
@@ -401,14 +388,15 @@
       src: id_rsa
       dest: /home/demo/.ssh
       owner: demo
-      mode: 600
+      mode: 0600
   - name: Copy id_rsa.pub into ssh directory for demo user
     copy:
       remote_src: true
       src: id_rsa.pub
       owner: demo
       dest: /home/demo/.ssh
-      mode: 644
+      mode: 0644
+
   - name: Install filezilla
     yum:
       name: filezilla
