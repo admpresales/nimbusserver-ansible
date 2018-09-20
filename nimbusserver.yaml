@@ -382,6 +382,9 @@
       group: demo
   - name: Import private key into gpg
     shell: gpg --import ./gpg/private.key
+    register: gpg_cmd
+    failed_when: gpg_cmd.rc == 1 or gpg_cmd.rc >= 2
+    changed_when: gpg_cmd.rc == 0
   - name: Initialize pass
     shell: pass init "Nimbus Demo"
 
