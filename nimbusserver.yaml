@@ -355,14 +355,14 @@
       url: https://api.github.com/repos/docker/docker-credential-helpers/releases
       return_content: true
     register: dockercredentials_json_reponse
-  - name: Download docker-credentials-secretservice
+  - name: Download docker-credentials-pass
     unarchive:
       src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-pass-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
       dest: /usr/bin
       remote_src: yes
-  - name: Set execution permissions on docker-credential-secretservice
+  - name: Set execution permissions on docker-credential-pass
     file:
-      path: /usr/bin/docker-credential-secretservice
+      path: /usr/bin/docker-credential-pass
       mode: 0755
   - name: Create .docker directory for demo
     file:
@@ -382,6 +382,13 @@
       group: demo
   - name: Import private key into gpg
     shell: gpg --import ./gpg/private.key
+    register: gpg_cmd
+    failed_when: gpg_cmd.rc == 1 or gpg_cmd.rc > 2
+    changed_when: gpg_cmd.rc == 0
+    become: yes
+    become_user: demo
+  - name: Import owner trust into gpg
+    shell: gpg --import ./gpg/ownertrust.txt
     register: gpg_cmd
     failed_when: gpg_cmd.rc == 1 or gpg_cmd.rc > 2
     changed_when: gpg_cmd.rc == 0
