@@ -374,9 +374,11 @@
       mode: 0777
       owner: demo
       group: demo
+
+  #Only create the config.json if it doesn't already exists (force: no)
   - name: Set credentials helper to secretservice
     copy:
-      content: {{ docker_credstore }}
+      content: "{{ docker_credstore }}"
       dest: /home/demo/.docker/config.json
       force: no
       mode: 0644
