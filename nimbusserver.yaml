@@ -397,6 +397,7 @@
     become_user: demo
   - debug:
       msg: "{{gpgtrust_cmd}}"
+#TODO: Not idempotent
   - name: Initialize pass
     shell: pass init "Nimbus Demo"
     register: pass_cmd
@@ -609,9 +610,11 @@
   - name: Create link for quickstart guide
     file:
       src: /opt/nimbus/docs/quickstart.html
-      dest: /etc/systemd/system/quickstart.html
+      dest: /home/demo/Desktop/quickstart.html
       state: link
       force: true
+      owner: demo
+      group: demo
 
   - name: Get latest release info for nimbusapp
     uri:
