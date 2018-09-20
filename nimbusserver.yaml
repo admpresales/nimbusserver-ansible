@@ -381,7 +381,7 @@
       owner: demo
       group: demo
   - name: Import private key into gpg
-    shell: gpg --import private.key
+    shell: gpg --import ./gpg/private.key
   - name: Initialize pass
     shell: pass init Nimbus Demo
 
