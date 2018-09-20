@@ -385,8 +385,11 @@
     register: gpg_cmd
     failed_when: gpg_cmd.rc == 1 or gpg_cmd.rc >= 2
     changed_when: gpg_cmd.rc == 0
+    become: yes
+    become_user: demo
   - name: Initialize pass
     shell: pass init "Nimbus Demo"
+    become_user: demo
 
   #Setup SSH for root
   - name: Create SSH directory for root
