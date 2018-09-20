@@ -393,7 +393,7 @@
     become: yes
     become_user: demo
   - debug:
-    msg: "{{pass_cmd}}"
+      msg: "{{pass_cmd}}"
 
   #Setup SSH for root
   - name: Create SSH directory for root
