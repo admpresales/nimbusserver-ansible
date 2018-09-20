@@ -389,8 +389,12 @@
     become_user: demo
   - name: Initialize pass
     shell: pass init "Nimbus Demo"
+    register: pass_cmd
     become: yes
     become_user: demo
+  - debug:
+    msg: "{{pass_cmd}}"
+
   #Setup SSH for root
   - name: Create SSH directory for root
     file:
