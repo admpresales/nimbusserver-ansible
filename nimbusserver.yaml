@@ -12,6 +12,7 @@
     chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
     chrome_sync_policy: { "SyncDisabled" : true }
+    docker_credstore: { "credsStore": "pass" }
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
@@ -295,9 +296,6 @@
       mode: 0755
       owner: demo
 
-  #- name: Make Chrome Launcher Trusted
-  #  shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
-
   - name: Configure Docker Community Edition yum repository
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
@@ -310,6 +308,7 @@
       - yum-utils
       - device-mapper-persistent-data
       - lvm2
+      - pass
   - name: Install Docker Community Edition
     yum:
       name: docker-ce
@@ -349,6 +348,62 @@
       dest: /usr/local/bin/docker-app
       group: docker
       mode: 0775
+
+  #Install docker-credential-pass
+  - name: Get Latest release info for docker-credential-helps
+    uri:
+      url: https://api.github.com/repos/docker/docker-credential-helpers/releases
+      return_content: true
+    register: dockercredentials_json_reponse
+  - name: Download docker-credentials-pass
+    unarchive:
+      src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-pass-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
+      dest: /usr/bin
+      remote_src: yes
+#  - name: Set execution permissions on docker-credential-pass
+#    file:
+#      path: /usr/bin/docker-credential-pass
+#      mode: 0755
+  - name: Create .docker directory for demo
+    file:
+      path: /home/demo/.docker
+      state: directory
+      mode: 0777
+      owner: demo
+      group: demo
+  #Only create the config.json if it doesn't already exists (force: no)
+  - name: Set credentials helper to pass
+    copy:
+      content: "{{ docker_credstore }}"
+      dest: /home/demo/.docker/config.json
+      force: no
+      mode: 0644
+      owner: demo
+      group: demo
+  - name: Import private key into gpg
+    shell: gpg --import {{playbook_dir}}/gpg/private.key
+    register: gpgprivate_cmd
+    failed_when: not "'already in secret keyring' in gpgprivate_cmd" and gpgprivate_cmd.rc >= 1
+    changed_when: gpgprivate_cmd.rc == 0
+    become: yes
+    become_user: demo
+  - debug:
+      msg: "{{gpgprivate_cmd}}"
+  - name: Import owner trust into gpg
+    shell: gpg --import-ownertrust {{playbook_dir}}/gpg/ownertrust.txt
+    register: gpgtrust_cmd
+    changed_when: gpgtrust_cmd.stderr != ""
+    become: yes
+    become_user: demo
+  - debug:
+      msg: "{{gpgtrust_cmd}}"
+#TODO: Not idempotent
+  - name: Initialize pass
+    shell: pass init "Nimbus Demo"
+    register: pass_cmd
+    become: yes
+    become_user: demo
+
 
   #Setup SSH for root
   - name: Create SSH directory for root
@@ -431,11 +486,11 @@
     copy:
       src: /usr/share/applications/vinagre.desktop
       dest: /home/demo/Desktop/vinagre.desktop
+      force: no
       mode: 0755
       owner: demo
       group: demo
-
-#TODO: Make this step idempotent
+#TODO: Still non idempotent
   - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
@@ -478,7 +533,7 @@
       insertafter: '^\[daemon\]'
       state: present
 
-  - name: Setup automatic login for demo
+  - name: Enable automatic login
     lineinfile:
       line: "AutomaticLoginEnable=True"
       path: /etc/gdm/custom.conf
@@ -551,6 +606,15 @@
       mode: 0755
       owner: root
       group: wheel
+
+  - name: Create link for quickstart guide
+    file:
+      src: /opt/nimbus/docs/quickstart.html
+      dest: /home/demo/Desktop/quickstart.html
+      state: link
+      force: true
+      owner: demo
+      group: demo
 
   - name: Get latest release info for nimbusapp
     uri:
