@@ -390,7 +390,7 @@
   - debug:
       msg: "{{gpgprivate_cmd}}"
   - name: Import owner trust into gpg
-    shell: gpg --import {{playbook_dir}}/gpg/ownertrust.txt
+    shell: gpg --import-ownertrust {{playbook_dir}}/gpg/ownertrust.txt
     register: gpgtrust_cmd
     failed_when: gpgtrust_cmd.rc == 1 or gpgtrust_cmd.rc >= 2
     changed_when: gpgtrust_cmd.rc == 0
@@ -533,7 +533,7 @@
       insertafter: '^\[daemon\]'
       state: present
 
-  - name: Setup automatic login for demo
+  - name: Enable automatic login
     lineinfile:
       line: "AutomaticLoginEnable=True"
       path: /etc/gdm/custom.conf
