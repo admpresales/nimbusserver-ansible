@@ -381,18 +381,18 @@
       owner: demo
       group: demo
   - name: Import private key into gpg
-    shell: gpg --import ./gpg/private.key
+    shell: gpg --import {{playbook_dir}}/gpg/private.key
     register: gpgprivate_cmd
-    failed_when: gpgprivate_cmd.rc == 1 or gpgprivate_cmd.rc > 2
+    failed_when: gpgprivate_cmd.rc == 1 or gpgprivate_cmd.rc >= 2
     changed_when: gpgprivate_cmd.rc == 0
     become: yes
     become_user: demo
   - debug:
       msg: "{{gpgprivate_cmd}}"
   - name: Import owner trust into gpg
-    shell: gpg --import ./gpg/ownertrust.txt
+    shell: gpg --import {{playbook_dir}}/gpg/ownertrust.txt
     register: gpgtrust_cmd
-    failed_when: gpgtrust_cmd.rc == 1 or gpgtrust_cmd.rc > 2
+    failed_when: gpgtrust_cmd.rc == 1 or gpgtrust_cmd.rc >= 2
     changed_when: gpgtrust_cmd.rc == 0
     become: yes
     become_user: demo
