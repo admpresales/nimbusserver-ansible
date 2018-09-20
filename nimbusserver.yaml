@@ -12,7 +12,7 @@
     chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
     chrome_sync_policy: { "SyncDisabled" : true }
-    docker_credstore: { "credsStore": "secretservice" }
+    docker_credstore: { "credsStore": "pass" }
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
@@ -296,9 +296,6 @@
       mode: 0755
       owner: demo
 
-  #- name: Make Chrome Launcher Trusted
-  #  shell: gio set /home/demo/Desktop/google-chrome.desktop "metadata::trusted" yes
-
   - name: Configure Docker Community Edition yum repository
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
@@ -352,7 +349,7 @@
       group: docker
       mode: 0775
 
-  #Install docker-credential-secretservice
+  #Install docker-credential-pass
   - name: Get Latest release info for docker-credential-helps
     uri:
       url: https://api.github.com/repos/docker/docker-credential-helpers/releases
@@ -360,7 +357,7 @@
     register: dockercredentials_json_reponse
   - name: Download docker-credentials-secretservice
     unarchive:
-      src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-secretservice-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
+      src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-pass-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
       dest: /usr/bin
       remote_src: yes
   - name: Set execution permissions on docker-credential-secretservice
@@ -374,9 +371,8 @@
       mode: 0777
       owner: demo
       group: demo
-
   #Only create the config.json if it doesn't already exists (force: no)
-  - name: Set credentials helper to secretservice
+  - name: Set credentials helper to pass
     copy:
       content: "{{ docker_credstore }}"
       dest: /home/demo/.docker/config.json
@@ -384,6 +380,10 @@
       mode: 0644
       owner: demo
       group: demo
+  - name: Import private key into gpg
+    shell: gpg --import private.key
+  - name: Initialize pass
+    shell: pass init Nimbus Demo
 
   #Setup SSH for root
   - name: Create SSH directory for root
