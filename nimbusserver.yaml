@@ -383,7 +383,7 @@
   - name: Import private key into gpg
     shell: gpg --import ./gpg/private.key
   - name: Initialize pass
-    shell: pass init Nimbus Demo
+    shell: pass init "Nimbus Demo"
 
   #Setup SSH for root
   - name: Create SSH directory for root
@@ -470,6 +470,7 @@
       mode: 0755
       owner: demo
       group: demo
+#TODO: Still non idempotent
   - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
