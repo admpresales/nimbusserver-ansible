@@ -606,6 +606,13 @@
       owner: root
       group: wheel
 
+  - name: Create link for quickstart guide
+    file:
+      src: /opt/nimbus/docs/quickstart.html
+      dest: /etc/systemd/system/quickstart.html
+      state: link
+      force: true
+
   - name: Get latest release info for nimbusapp
     uri:
       url: https://api.github.com/repos/admpresales/nimbusapp/releases
