@@ -12,6 +12,7 @@
     chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
     chrome_sync_policy: { "SyncDisabled" : true }
+    docker_credstore: { "credsStore": "secretservice" }
     pubkey: "{{ lookup('file', './id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
@@ -310,6 +311,7 @@
       - yum-utils
       - device-mapper-persistent-data
       - lvm2
+      - pass
   - name: Install Docker Community Edition
     yum:
       name: docker-ce
@@ -349,6 +351,37 @@
       dest: /usr/local/bin/docker-app
       group: docker
       mode: 0775
+
+  #Install docker-credential-secretservice
+  - name: Get Latest release info for docker-credential-helps
+    uri:
+      url: https://api.github.com/repos/docker/docker-credential-helpers/releases
+      return_content: true
+    register: dockercredentials_json_reponse
+  - name: Download docker-credentials-secretservice
+    unarchive:
+      src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].name }}/docker-credential-secretservice-{{ dockercredentials_json_reponse.json[0].name }}-amd64.tar.gz"
+      dest: /usr/bin
+      remote_src: yes
+  - name: Set execution permissions on docker-credentials-secretservice
+    file:
+      path: /usr/bin/docker-credentials-secretservice
+      mode: 0755
+  - name: Create .docker directory for demo
+    file:
+      path: /home/demo/.docker
+      state: directory
+      mode: 0777
+      owner: demo
+      group: demo
+  - name: Set credentials helper to secretservice
+    copy:
+      content: {{ docker_credstore }}
+      dest: /home/demo/.docker/config.json
+      force: no
+      mode: 0644
+      owner: demo
+      group: demo
 
   #Setup SSH for root
   - name: Create SSH directory for root
@@ -431,11 +464,10 @@
     copy:
       src: /usr/share/applications/vinagre.desktop
       dest: /home/demo/Desktop/vinagre.desktop
+      force: no
       mode: 0755
       owner: demo
       group: demo
-
-#TODO: Make this step idempotent
   - name: Change name of vinagre icon to LeanFT Viewer
     lineinfile:
       path: /home/demo/Desktop/vinagre.desktop
