@@ -392,8 +392,7 @@
   - name: Import owner trust into gpg
     shell: gpg --import-ownertrust {{playbook_dir}}/gpg/ownertrust.txt
     register: gpgtrust_cmd
-    failed_when: gpgtrust_cmd.rc == 1 or gpgtrust_cmd.rc >= 2
-    changed_when: gpgtrust_cmd.rc == 0
+    changed_when: gpgtrust_cmd.stderr != ""
     become: yes
     become_user: demo
   - debug:
