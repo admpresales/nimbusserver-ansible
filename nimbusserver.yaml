@@ -410,7 +410,7 @@
     file:
       path: /root/.ssh
       state: directory
-      mode: 0777
+      mode: 0755
   - name: Set authorized key for root
     authorized_key:
       user: root
