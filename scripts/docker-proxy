@@ -10,12 +10,17 @@ function usage()
    echo -e "  add      Adds the specified proxy to the Docker service daemon."
    echo -e "           ex. docker-proxy add http://www.myproxy.com"
    echo -e "  remove   Removes all docker proxy settings from the Docker service daemon"
+   echo -e "  status   Shows the current docker service proxy configuration"
 }
 
 
 while [[ "$1" != "" ]]; do
   PARAM=$1
   VALUE=$2
+  if [[ $PARAM == "" ]] then;
+    usage
+    exit 0
+  fi
   case $PARAM in
     help)
       usage
@@ -30,7 +35,7 @@ while [[ "$1" != "" ]]; do
       HTTP_PROXY_VALUE=$VALUE
       break
       ;;
-    remove )
+    remove | status)
       ACTION=$PARAM
       break
       ;;
@@ -61,7 +66,8 @@ if [ $ACTION  == remove ]; then
   fi
 fi
 
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-
+if [ $ACTION != "status" ]; then
+  sudo systemctl daemon-reload
+  sudo systemctl restart docker
+fi
 sudo systemctl show --property=Environment docker
