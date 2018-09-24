@@ -2,15 +2,18 @@
 #Author: Jason Hrabi
 #Adds the specified proxy into Docker
 #Based upon documentation found here: https://docs.docker.com/engine/admin/systemd/#httphttps-proxy
+
 function usage()
 {
+   echo "Shell script to inject proxy values into the Docker service daemon"
+   echo ""
    echo "Usage: docker-proxy COMMAND [OPTIONS]"
    echo -e ""
    echo -e "Commands:"
    echo -e "  add      Adds the specified proxy to the Docker service daemon."
    echo -e "           ex. docker-proxy add http://www.myproxy.com"
-   echo -e "  remove   Removes all docker proxy settings from the Docker service daemon"
-   echo -e "  status   Shows the current docker service proxy configuration"
+   echo -e "  remove   Removes all proxy settings from the Docker service daemon"
+   echo -e "  status   Shows the current Docker service proxy configuration"
 }
 
 if [[ $1 == "" ]]; then
@@ -29,7 +32,7 @@ while [[ "$1" != "" ]]; do
       ;;
     add)
       if [ $VALUE == "" ]; then
-        echo "Error: No proxy value provided to add to docker"
+        echo "Error: No proxy value provided to add to Docker service daemon"
         exit 1;
       fi
       ACTION=$PARAM
