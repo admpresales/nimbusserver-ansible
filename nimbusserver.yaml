@@ -421,13 +421,13 @@
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
-      src: id_rsa
+      src: ssh/id_rsa
       dest: /root/.ssh
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for root
     copy:
       remote_src: true
-      src: id_rsa.pub
+      src: ssh/id_rsa.pub
       dest: /root/.ssh
       mode: 0644
 
@@ -440,14 +440,14 @@
   - name: Copy id_rsa into ssh directory for demo user
     copy:
       remote_src: true
-      src: id_rsa
+      src: ssh/id_rsa
       dest: /home/demo/.ssh
       owner: demo
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for demo user
     copy:
       remote_src: true
-      src: id_rsa.pub
+      src: ssh/id_rsa.pub
       owner: demo
       dest: /home/demo/.ssh
       mode: 0644
@@ -481,26 +481,6 @@
     copy:
       src: firefox/FT.FirefoxAgent@microfocus.com.xpi
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
-
-  - name: Copy vinagre launcher to desktop
-    copy:
-      src: /usr/share/applications/vinagre.desktop
-      dest: /home/demo/Desktop/vinagre.desktop
-      force: no
-      mode: 0755
-      owner: demo
-      group: demo
-#TODO: Still non idempotent
-  - name: Change name of vinagre icon to LeanFT Viewer
-    lineinfile:
-      path: /home/demo/Desktop/vinagre.desktop
-      regexp: '^Name[en_US]='
-      line: 'Name[en_US]=LeanFT Viewer'
-  - name: Change Execution Statement for LeanFT Viewer
-    lineinfile:
-      path: /home/demo/Desktop/vinagre.desktop
-      regexp: '^Exec='
-      line: 'Exec=vinagre ::5900'
 
   - name: Copy gnome-terminal launcher to desktop
     copy:
@@ -627,6 +607,14 @@
       src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
+
+  - name: Install docker-proxy script
+    copy:
+       src: scripts/docker-proxy
+       dest: /usr/local/bin
+       remote_src: yes
+       mode: 0755
+
 
 
 
