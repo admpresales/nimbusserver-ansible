@@ -17,7 +17,7 @@ function usage()
 while [[ "$1" != "" ]]; do
   PARAM=$1
   VALUE=$2
-  if [[ $PARAM == "" ]] then;
+  if [[ $PARAM == "" ]]; then
     usage
     exit 0
   fi
