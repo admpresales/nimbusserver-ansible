@@ -13,7 +13,7 @@
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
     chrome_sync_policy: { "SyncDisabled" : true }
     docker_credstore: { "credsStore": "pass" }
-    pubkey: "{{ lookup('file', './id_rsa.pub') }}"
+    pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
 
   tasks:
