@@ -8,23 +8,23 @@
 <body class="c11"><p class="c16 title"><span class="c13">Welcome to Nimbus Server 2018.09</span>
 </p>
 <h2 class="c3"><span class="c0">Pairing Your Nimbus Server and Nimbus Client</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4" id="h.gjdgxs"><span class="c5">Nimbus Server is configured to work out of the box, although if you are using Nimbus Client or want to access Nimbus Server from your laptop (host) PC, you need to change the default Nimbus Server IP address in the Nimbus Client or the host machine </span><span
         class="c1">hosts</span><span class="c5">&nbsp;file to the actual IP address of your Nimbus Server VM. &nbsp;To determine your Nimbus Server IP address, run the </span><span
         class="c1">ifconfig</span><span class="c5">&nbsp;command from a terminal window and use the IP address assigned to the ens33 (host-only) virtual network adapter if running on VMWare, or eth</span><span
         class="c6">0 if running on AWS</span><span class="c5">. Otherwise, no changes are necessary. &nbsp;You should not change the IP address of the Nimbus Server host name.</span>
 </p>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c5">The username is </span><span class="c1">demo</span><span class="c5">&nbsp;and the password is </span><span
         class="c1">Password1</span><span class="c5">. &nbsp;If you need elevated root privileges, the root password is also </span><span
         class="c1">Password1</span><span class="c5">.</span></p>
 <h2 class="c3" id="h.w4y3j1gb5p69"><span class="c0">Performance Tweaking</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c5">Nimbus Server was configured with default VMware Workstation Virtual Machine Settings that work for the majority of employees, but you should adjust the </span><span
         class="c1">Memory</span><span class="c5">&nbsp;and </span><span class="c1">Processors</span><span class="c5">&nbsp;settings to reflect your actual hardware. &nbsp;Failure to do so will almost certainly affect virtual machine performance.</span>
 </p>
 <h2 class="c3"><span class="c0">Downloading Docker Images</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c5">Nimbus Server contains no Docker images upon initial download. &nbsp;You need to pull (download) demo images that meet your needs after first logging in to </span><span
         class="c6 c12"><a class="c8"
                           href="https://www.google.com/url?q=https://hub.docker.com/&amp;sa=D&amp;ust=1537238061824000">Docker Hub</a></span><span
@@ -33,14 +33,14 @@
         class="c12 c6"><a class="c8" href="mailto:keith.cutler@microfocus.com">Keith Cutler</a></span><span class="c5">&nbsp;if you need access to the private </span><span
         class="c1">admpresales</span><span class="c5">&nbsp;organization on Docker Hub.</span></p>
 <h2 class="c3"><span class="c0">Repository Information</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c6">Available Docker Images are visible by going to </span><span class="c6 c10"><a class="c8"
                                                                                                               href="https://www.google.com/url?q=https://hub.docker.com/u/admpresales/dashboard/&amp;sa=D&amp;ust=1537238061826000">https://hub.docker.com/u/admpresales/dashboard/</a></span>
 </p>
-<p class="c4 c7"><span class="c5"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c5">The image repositories on Docker Hub have tabbed sections, two of which are described below:</span>
 </p>
-<p class="c4 c7"><span class="c5"></span></p>
+<p class="c4"></p>
 <ul class="c17 lst-kix_list_3-0 start">
     <li class="c2"><span class="c1">Repo Info</span><span class="c5">: Contains a description of the image, shows the correct </span><span
             class="c1">docker run</span><span class="c5">&nbsp;command to pull the image and create the running container, and provides container access credentials.</span>
@@ -53,12 +53,12 @@
         class="c5">&nbsp;tab and you can copy and paste them into a terminal window for ease of use. &nbsp;Remember to supply the appropriate tag for the image you wish to run. &nbsp;Docker run commands pull images if they don&rsquo;t exist locally and create running containers.</span>
 </p>
 <h2 class="c3"><span class="c0">nimbusapp</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c6">This version of Nimbus Server comes with a script called </span><span class="c15">nimbusapp </span><span
         class="c6">designed to help leverage the power of Docker Compose and Docker App to help get your Nimbus Docker containers started easier. In order to learn more about it, please type &ldquo;nimbusapp --help&rdquo; in a terminal session.</span>
 </p>
 <h2 class="c3"><span class="c0">Docker Behind a Proxy</span></h2>
-<p class="c4 c7"><span class="c9"></span></p>
+<p class="c4"></p>
 <p class="c4"><span class="c6">This version of Nimbus Server comes with a script called </span><span class="c15">docker-proxy</span><span
         class="c6">designed to help add proxy setting to your Docker daemon if you are behind a proxy.  In order to learn more about it, please type "docker-proxy --help" in a terminal session.</span>
 </p</body>
