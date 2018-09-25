@@ -1,0 +1,57 @@
+{
+  "variables": {
+    "version": ""
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "install-ansible.sh"
+    },
+    {
+      "type": "file",
+      "source": "ansible",
+      "destination": "/tmp/ansible"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "nimbusserver.yml"
+    }
+  ],
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "vm_name": "nimbusserver",
+      "disk_size": 320000,
+      "ssh_username": "root",
+      "ssh_password": "Password1",
+      "ssh_timeout" : "20m",
+      "iso_urls": [
+        "C:/Users/hrabi/Downloads/CentOS-7-x86_64-Minimal-1804.iso",
+        "http://mirrors.mit.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "714acc0aefb32b7d51b515e25546835e55a90da9fb00417fbee2d03a62801efd",
+      "shutdown_command": "shutdown -P now",
+      "vmx_data": {
+        "memsize": "10",
+        "numvcpus": "4",
+        "cpuid.coresPerSocket": "4",
+        "ethernet0.pciSlotNumber": "33",
+        "ethernet0.present": "TRUE",
+        "ethernet0.connectionType": "hostonly",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.addressType": = "generated",
+        "ethernet0.pciSlotNumber": = "33",
+
+
+
+      ],
+      "floppy_files": [
+        "kickstart/centos7-preseed.cfg"
+      ],
+      "boot_command": "<tab> inst.text inst.ks=hd:fd0:/centos7-preseed.cfg <enter><wait>"
+    }
+
+  ]
+}

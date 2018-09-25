@@ -31,7 +31,7 @@ while [[ "$1" != "" ]]; do
       exit 0
       ;;
     add)
-      if [ $VALUE == "" ]; then
+      if [[ -z $VALUE ]]; then
         echo "Error: No proxy value provided to add to Docker service daemon"
         exit 1;
       fi
@@ -49,11 +49,6 @@ while [[ "$1" != "" ]]; do
       exit 1
   esac
 done
-
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root or with sudo access"
-  exit
-fi
 
 if [ $ACTION  == "add" ]; then
   if [ ! -d /etc/systemd/system/docker.service.d ]; then
@@ -74,4 +69,5 @@ if [ $ACTION != "status" ]; then
   sudo systemctl daemon-reload
   sudo systemctl restart docker
 fi
-sudo systemctl show --property=Environment docker
+
+systemctl show --property=Environment docker

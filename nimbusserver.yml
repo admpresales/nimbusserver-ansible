@@ -13,8 +13,9 @@
     chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
     chrome_sync_policy: { "SyncDisabled" : true }
     docker_credstore: { "credsStore": "pass" }
-    pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
+    pubkey: "{{ lookup('file', '{{ file_dir }}/ssh/id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
+    file_dir: /tmp/ansible
 
   tasks:
   - name: Set Hostname to nimbusserver
@@ -253,7 +254,7 @@
   - name: Copy master preferences file for Chrome into Chrome
     copy:
       remote_src: true
-      src: chrome/master_preferences
+      src: {{ file_dir }}/chrome/master_preferences
       dest: /opt/google/chrome/master_preferences
 
 #Chrome GPO for setting browser settings as expected
@@ -279,7 +280,7 @@
     copy: content="{{ uft_extension_details }}" dest=/opt/google/chrome/extensions/{{ uft_extension_id }}.json
   - name: Copy Chrome Bookmarks to archive
     copy:
-      src: chrome/chrome-bookmarks.html
+      src: {{ file_dir }}/chrome/chrome-bookmarks.html
       dest: /opt/google/chrome/archive/chrome-bookmarks.html
       mode: 0755
       owner: demo
@@ -421,13 +422,13 @@
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
-      src: ssh/id_rsa
+      src: {{ file_dir }}/ssh/id_rsa
       dest: /root/.ssh
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for root
     copy:
       remote_src: true
-      src: ssh/id_rsa.pub
+      src: {{ file_dir }}/ssh/id_rsa.pub
       dest: /root/.ssh
       mode: 0644
 
@@ -440,14 +441,14 @@
   - name: Copy id_rsa into ssh directory for demo user
     copy:
       remote_src: true
-      src: ssh/id_rsa
+      src: {{ file_dir }}/ssh/id_rsa
       dest: /home/demo/.ssh
       owner: demo
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for demo user
     copy:
       remote_src: true
-      src: ssh/id_rsa.pub
+      src: {{ file_dir }}/ssh/id_rsa.pub
       owner: demo
       dest: /home/demo/.ssh
       mode: 0644
@@ -464,22 +465,22 @@
       owner: demo
   - name: Copy local-settings to Firefox default directory
     copy:
-      src: firefox/local-settings.js
+      src: {{ file_dir }}/firefox/local-settings.js
       dest: /usr/lib64/firefox/defaults/pref
       mode: 0644
   - name: Copy mozilla.cfg to Firefox install directory
     copy:
-      src: firefox/mozilla.cfg
+      src: {{ file_dir }}/firefox/mozilla.cfg
       dest: /usr/lib64/firefox/mozilla.cfg
       mode: 0644
   - name: Copy policies to Firefox install directory
     copy:
-      src: firefox/policies.json
+      src: {{ file_dir }}/firefox/policies.json
       dest: "{{ firefox_install_dir }}/distribution/policies.json"
       mode: 0644
   - name: Copy LeanFT extension to Firefox extensions directory
     copy:
-      src: firefox/FT.FirefoxAgent@microfocus.com.xpi
+      src: {{ file_dir }}/firefox/FT.FirefoxAgent@microfocus.com.xpi
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
 
   - name: Copy gnome-terminal launcher to desktop
@@ -539,14 +540,14 @@
   - name: Copy desktop script into nimbus scripts
     copy:
       remote_src: true
-      src: trustdesktop.sh
+      src: {{ file_dir }}/trustdesktop.sh
       dest: /opt/nimbus/scripts/trustdesktop.sh
       mode: 0755
 
   - name: Copy autostart script into demo user's autostart directory
     copy:
       remote_src: true
-      src: trustdesktop.desktop
+      src: {{ file_dir }}/trustdesktop.desktop
       dest: /home/demo/.config/autostart/trustdesktop.desktop
       mode: 0755
       owner: demo
@@ -555,7 +556,7 @@
   - name: Add default browser configuration to demo user
     copy:
       remote_src: true
-      src: config/mimeapps.list
+      src: {{ file_dir }}/config/mimeapps.list
       dest: /home/demo/.config/mimeapps.list
       mode: 0644
       owner: demo
@@ -564,7 +565,7 @@
   - name: Add default resolution configuration to demo user
     copy:
       remote_src: true
-      src: config/monitors.xml
+      src: {{ file_dir }}/config/monitors.xml
       dest: /home/demo/.config/monitors.xml
       mode: 0644
       owner: demo
@@ -581,7 +582,7 @@
   - name: Copy autostart script into demo user's autostart directory
     copy:
       remote_src: true
-      src: quickstart.html
+      src: {{ file_dir }}/quickstart.html
       dest: /opt/nimbus/docs/quickstart.html
       mode: 0755
       owner: root
@@ -610,8 +611,8 @@
 
   - name: Install docker-proxy script
     copy:
-       src: scripts/docker-proxy
-       dest: /usr/local/bin
+       src: {{ file_dir }}/scripts/docker-proxy
+       dest: /usr/bin
        remote_src: yes
        mode: 0755
 
