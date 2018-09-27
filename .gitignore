@@ -3,3 +3,4 @@
 .idea/*
 packer_cache
 output-vmware-iso
+*.7z

@@ -1,10 +1,12 @@
 # nimbusserver-ansible
-Ansible project to build nimbusserver on Centos 7 Minimal
+Nimbus Server VMWare build files using Packer and Ansible
+
+To work, install Packer as per the instructions (https://www.packer.io/intro/getting-started/install.html)
+, add add packer to the system path.
+
+To run the build, do:
+
+packer build -var version=2018.09 nimbusserver.json
+
  
-To install git: yum install -y git
 
-Checkout project into /tmp or any directory that is readable by a non-root user
-
-To install ansible, run the install-ansible.sh script
-
-To run the ansible playbook from this project, run: ansible-playbook nimbusserver.yaml

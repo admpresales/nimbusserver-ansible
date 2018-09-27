@@ -254,7 +254,7 @@
   - name: Copy master preferences file for Chrome into Chrome
     copy:
       remote_src: true
-      src: {{ file_dir }}/chrome/master_preferences
+      src: "{{ file_dir }}/chrome/master_preferences"
       dest: /opt/google/chrome/master_preferences
 
 #Chrome GPO for setting browser settings as expected
@@ -280,7 +280,7 @@
     copy: content="{{ uft_extension_details }}" dest=/opt/google/chrome/extensions/{{ uft_extension_id }}.json
   - name: Copy Chrome Bookmarks to archive
     copy:
-      src: {{ file_dir }}/chrome/chrome-bookmarks.html
+      src: "{{ file_dir }}/chrome/chrome-bookmarks.html"
       dest: /opt/google/chrome/archive/chrome-bookmarks.html
       mode: 0755
       owner: demo
@@ -382,7 +382,7 @@
       owner: demo
       group: demo
   - name: Import private key into gpg
-    shell: gpg --import {{playbook_dir}}/gpg/private.key
+    shell: gpg --import {{file_dir}}/gpg/private.key
     register: gpgprivate_cmd
     failed_when: not "'already in secret keyring' in gpgprivate_cmd" and gpgprivate_cmd.rc >= 1
     changed_when: gpgprivate_cmd.rc == 0
@@ -391,7 +391,7 @@
   - debug:
       msg: "{{gpgprivate_cmd}}"
   - name: Import owner trust into gpg
-    shell: gpg --import-ownertrust {{playbook_dir}}/gpg/ownertrust.txt
+    shell: gpg --import-ownertrust {{file_dir}}/gpg/ownertrust.txt
     register: gpgtrust_cmd
     changed_when: gpgtrust_cmd.stderr != ""
     become: yes
@@ -422,13 +422,13 @@
   - name: Copy id_rsa into ssh directory for root
     copy:
       remote_src: true
-      src: {{ file_dir }}/ssh/id_rsa
+      src: "{{ file_dir }}/ssh/id_rsa"
       dest: /root/.ssh
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for root
     copy:
       remote_src: true
-      src: {{ file_dir }}/ssh/id_rsa.pub
+      src: "{{ file_dir }}/ssh/id_rsa.pub"
       dest: /root/.ssh
       mode: 0644
 
@@ -441,14 +441,14 @@
   - name: Copy id_rsa into ssh directory for demo user
     copy:
       remote_src: true
-      src: {{ file_dir }}/ssh/id_rsa
+      src: "{{ file_dir }}/ssh/id_rsa"
       dest: /home/demo/.ssh
       owner: demo
       mode: 0600
   - name: Copy id_rsa.pub into ssh directory for demo user
     copy:
       remote_src: true
-      src: {{ file_dir }}/ssh/id_rsa.pub
+      src: "{{ file_dir }}/ssh/id_rsa.pub"
       owner: demo
       dest: /home/demo/.ssh
       mode: 0644
@@ -465,22 +465,22 @@
       owner: demo
   - name: Copy local-settings to Firefox default directory
     copy:
-      src: {{ file_dir }}/firefox/local-settings.js
+      src: "{{ file_dir }}/firefox/local-settings.js"
       dest: /usr/lib64/firefox/defaults/pref
       mode: 0644
   - name: Copy mozilla.cfg to Firefox install directory
     copy:
-      src: {{ file_dir }}/firefox/mozilla.cfg
+      src: "{{ file_dir }}/firefox/mozilla.cfg"
       dest: /usr/lib64/firefox/mozilla.cfg
       mode: 0644
   - name: Copy policies to Firefox install directory
     copy:
-      src: {{ file_dir }}/firefox/policies.json
+      src: "{{ file_dir }}/firefox/policies.json"
       dest: "{{ firefox_install_dir }}/distribution/policies.json"
       mode: 0644
   - name: Copy LeanFT extension to Firefox extensions directory
     copy:
-      src: {{ file_dir }}/firefox/FT.FirefoxAgent@microfocus.com.xpi
+      src: "{{ file_dir }}/firefox/FT.FirefoxAgent@microfocus.com.xpi"
       dest: "{{ firefox_install_dir }}/distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi"
 
   - name: Copy gnome-terminal launcher to desktop
@@ -540,14 +540,14 @@
   - name: Copy desktop script into nimbus scripts
     copy:
       remote_src: true
-      src: {{ file_dir }}/trustdesktop.sh
+      src: "{{ file_dir }}/trustdesktop.sh"
       dest: /opt/nimbus/scripts/trustdesktop.sh
       mode: 0755
 
   - name: Copy autostart script into demo user's autostart directory
     copy:
       remote_src: true
-      src: {{ file_dir }}/trustdesktop.desktop
+      src: "{{ file_dir }}/trustdesktop.desktop"
       dest: /home/demo/.config/autostart/trustdesktop.desktop
       mode: 0755
       owner: demo
@@ -556,7 +556,7 @@
   - name: Add default browser configuration to demo user
     copy:
       remote_src: true
-      src: {{ file_dir }}/config/mimeapps.list
+      src: "{{ file_dir }}/config/mimeapps.list"
       dest: /home/demo/.config/mimeapps.list
       mode: 0644
       owner: demo
@@ -565,7 +565,7 @@
   - name: Add default resolution configuration to demo user
     copy:
       remote_src: true
-      src: {{ file_dir }}/config/monitors.xml
+      src: "{{ file_dir }}/config/monitors.xml"
       dest: /home/demo/.config/monitors.xml
       mode: 0644
       owner: demo
@@ -582,7 +582,7 @@
   - name: Copy autostart script into demo user's autostart directory
     copy:
       remote_src: true
-      src: {{ file_dir }}/quickstart.html
+      src: "{{ file_dir }}/quickstart.html"
       dest: /opt/nimbus/docs/quickstart.html
       mode: 0755
       owner: root
@@ -609,12 +609,29 @@
       dest: /usr/local/bin
       remote_src: yes
 
-  - name: Install docker-proxy script
+  - name: Install docker-proxy script to /usr/bin
     copy:
-       src: {{ file_dir }}/scripts/docker-proxy
+       src: "{{ file_dir }}/scripts/docker-proxy"
        dest: /usr/bin
        remote_src: yes
        mode: 0755
+
+  - name: Install docker-proxy script to /usr/local/bin
+    copy:
+       src: "{{ file_dir }}/scripts/docker-proxy"
+       dest: /usr/local/bin
+       remote_src: yes
+       mode: 0755
+
+  - name: Run dos2unix on docker-proxy script
+    shell: dos2unix /usr/local/bin/docker-proxy
+
+  - name: Run dos2unix on docker-proxy script
+    shell: dos2unix /usr/bin/docker-proxy
+
+
+
+
 
 
 

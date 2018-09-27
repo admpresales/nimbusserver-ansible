@@ -15,14 +15,20 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "nimbusserver.yml"
+      "playbook_file": "ansible/nimbusserver.yml"
+    },
+    {
+      "type": "shell",
+      "inline": ["rm -rf /tmp/ansible"]
     }
   ],
   "builders": [
     {
       "type": "vmware-iso",
-      "vm_name": "nimbusserver",
-      "disk_size": 320000,
+      "name": "nimbusserver",
+      "output_directory": "nimbusserver-{{user `version`}}",
+      "vm_name": "nimbusserver-{{user `version`}}",
+      "disk_size": 307200,
       "ssh_username": "root",
       "ssh_password": "Password1",
       "ssh_timeout" : "20m",
@@ -34,24 +40,41 @@
       "iso_checksum": "714acc0aefb32b7d51b515e25546835e55a90da9fb00417fbee2d03a62801efd",
       "shutdown_command": "shutdown -P now",
       "vmx_data": {
-        "memsize": "10",
+        "memsize": "10240",
         "numvcpus": "4",
         "cpuid.coresPerSocket": "4",
         "ethernet0.pciSlotNumber": "33",
         "ethernet0.present": "TRUE",
+        "ethernet0.wakeOnPcktRcv": "FALSE",
         "ethernet0.connectionType": "hostonly",
         "ethernet0.virtualDev": "e1000",
-        "ethernet0.addressType": = "generated",
-        "ethernet0.pciSlotNumber": = "33",
-
-
-
-      ],
+        "ethernet0.networkName": "VM Network",
+        "ethernet1.pciSlotNumber": "34",
+        "ethernet1.present": "TRUE",
+        "ethernet1.wakeOnPcktRcv": "FALSE",
+        "ethernet1.connectionType":  "nat",
+        "ethernet1.virtualDev": "e1000",
+        "ethernet1.networkName": "VM Network",
+        "ethernet2.pciSlotNumber": "35",
+        "ethernet2.present": "TRUE",
+        "ethernet1.wakeOnPcktRcv": "FALSE",
+        "ethernet2.startConnected": "FALSE",
+        "ethernet2.virtualDev": "e1000"
+      },
+      "vmx_data_post": {
+        "floppy0.present": "FALSE",
+        "ide0:0.present": "FALSE"
+      },
       "floppy_files": [
         "kickstart/centos7-preseed.cfg"
       ],
       "boot_command": "<tab> inst.text inst.ks=hd:fd0:/centos7-preseed.cfg <enter><wait>"
-    }
-
+    },
+    "post-processors": [
+      {
+        "type": "compress",
+        "output": "nimbusserver-{{user `version`}}.tar.gz"
+      }
+    ]
   ]
 }
