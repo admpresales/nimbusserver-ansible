@@ -7,11 +7,11 @@ function usage()
 {
    echo "Shell script to inject proxy values into the Docker service daemon"
    echo ""
-   echo "Usage: docker-proxy COMMAND [OPTIONS]"
+   echo "Usage: nimbus-docker-proxy COMMAND [OPTIONS]"
    echo -e ""
    echo -e "Commands:"
    echo -e "  add      Adds the specified proxy to the Docker service daemon."
-   echo -e "           ex. docker-proxy add http://www.myproxy.com"
+   echo -e "           ex. nimbus-docker-proxy add http://www.myproxy.com"
    echo -e "  remove   Removes all proxy settings from the Docker service daemon"
    echo -e "  status   Shows the current Docker service proxy configuration"
 }

@@ -609,25 +609,25 @@
       dest: /usr/local/bin
       remote_src: yes
 
-  - name: Install docker-proxy script to /usr/bin
+  - name: Install nimbus-docker-proxy script to /usr/bin
     copy:
-       src: "{{ file_dir }}/scripts/docker-proxy"
+       src: "{{ file_dir }}/scripts/nimbus-docker-proxy"
        dest: /usr/bin
        remote_src: yes
        mode: 0755
 
-  - name: Install docker-proxy script to /usr/local/bin
+  - name: Install nimbus-docker-proxy script to /usr/local/bin
     copy:
-       src: "{{ file_dir }}/scripts/docker-proxy"
+       src: "{{ file_dir }}/scripts/nimbus-docker-proxy"
        dest: /usr/local/bin
        remote_src: yes
        mode: 0755
 
-  - name: Run dos2unix on docker-proxy script
-    shell: dos2unix /usr/local/bin/docker-proxy
+  - name: Run dos2unix on nimbus-docker-proxy script
+    shell: dos2unix /usr/local/bin/nimbus-docker-proxy
 
-  - name: Run dos2unix on docker-proxy script
-    shell: dos2unix /usr/bin/docker-proxy
+  - name: Run dos2unix on nimbus-docker-proxy script
+    shell: dos2unix /usr/bin/nimbus-docker-proxy
 
 
 
