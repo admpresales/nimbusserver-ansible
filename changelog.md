@@ -1,6 +1,21 @@
 # nimbusserver-ansible
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# [2018.09] - 2018-09-28
+
+### Added
+- Added docker-app
+- Added nimbusapp script to support docker-app
+- Added nimbus-docker-proxy script for setting up docker proxy settings
+
+### Changed
+- Build is now performed using Ansible and Packer
+- Build is now under version control
+
+### Removed
+- LeanFT Viewer icon is now gone
+- README.txt is now gone, in favour of quickstart.html
+
 # [2018.05] - 2018-05-10
 
 ### Added

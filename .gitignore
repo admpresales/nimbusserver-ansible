@@ -4,3 +4,5 @@
 packer_cache
 output-vmware-iso
 *.7z
+*.gz
+*.tar

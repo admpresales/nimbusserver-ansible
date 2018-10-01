@@ -28,6 +28,8 @@
       "name": "nimbusserver",
       "output_directory": "nimbusserver-{{user `version`}}",
       "vm_name": "nimbusserver-{{user `version`}}",
+      "guest_os_type": "centos-64",
+      "version": "12",
       "disk_size": 307200,
       "ssh_username": "root",
       "ssh_password": "Password1",
