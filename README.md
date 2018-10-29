@@ -2,7 +2,7 @@
 Nimbus Server VMWare build files using Packer and Ansible
 
 To work, install Packer as per the instructions (https://www.packer.io/intro/getting-started/install.html)
-, add add packer to the system path.
+, and add packer to the system path.
 
 To run the build, do:
 
