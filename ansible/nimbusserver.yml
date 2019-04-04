@@ -326,6 +326,7 @@
   - name: Create Docker network demo-net
     docker_network:
       name: demo-net
+      appends: true
       ipam_options:
         subnet: '172.50.0.0/16'
         gateway: 172.50.0.1
