@@ -323,6 +323,15 @@
   - name: Install Docker python library
     pip:
       name: docker
+
+  # The docker_network module fails if an incompatible gssapi version is installed
+  # gssapi is not required for the plugin to function, so remove it
+  # https://github.com/paramiko/paramiko/issues/1069#issuecomment-352459767
+  - name: Remove python-gssapi
+    yum:
+      name: python-gssapi
+      state: removed
+
   - name: Create Docker network demo-net
     docker_network:
       name: demo-net
@@ -330,6 +339,7 @@
       ipam_options:
         subnet: '172.50.0.0/16'
         gateway: 172.50.0.1
+
   - name: Install Docker Compose library
     pip:
       name: docker-compose
@@ -452,6 +462,7 @@
   - name: Install filezilla
     yum:
       name: filezilla
+
 
   - name: Copy Firefox Launcher to Desktop
     copy:
