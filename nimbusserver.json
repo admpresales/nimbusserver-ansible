@@ -1,6 +1,9 @@
 {
   "variables": {
-    "version": ""
+    "version": "",
+    "iso_name": "CentOS-7-x86_64-Minimal-1810.iso",
+    "iso_checksum": "38d5d51d9d100fd73df031ffd6bd8b1297ce24660dc8c13a3b8b4534a4bd291c",
+    "iso_local_dir": "C:/Users/{{ env `USERNAME` }}/Downloads"
   },
   "provisioners": [
     {
@@ -9,17 +12,9 @@
       "script": "install-ansible.sh"
     },
     {
-      "type": "file",
-      "source": "ansible",
-      "destination": "/tmp/ansible"
-    },
-    {
       "type": "ansible-local",
+      "playbook_dir": "ansible",
       "playbook_file": "ansible/nimbusserver.yml"
-    },
-    {
-      "type": "shell",
-      "inline": ["rm -rf /tmp/ansible"]
     }
   ],
   "builders": [
@@ -35,11 +30,11 @@
       "ssh_password": "Password1",
       "ssh_timeout" : "20m",
       "iso_urls": [
-        "C:/Users/hrabi/Downloads/CentOS-7-x86_64-Minimal-1804.iso",
-        "http://mirrors.mit.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso"
+        "file://{{user `iso_local_dir`}}/{{user `iso_name`}}",
+        "http://mirrors.mit.edu/centos/7/isos/x86_64/{{user `iso_name`}}"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "714acc0aefb32b7d51b515e25546835e55a90da9fb00417fbee2d03a62801efd",
+      "iso_checksum": "{{user `iso_checksum`}}",
       "shutdown_command": "shutdown -P now",
       "vmx_data": {
         "memsize": "10240",
