@@ -338,7 +338,7 @@
     register: dockerapp_json_reponse
   - name: Download docker-app
     unarchive:
-      src: "https://github.com/docker/app/releases/download/{{ dockerapp_json_reponse.json[0].name }}/docker-app-linux.tar.gz"
+      src: "https://github.com/docker/app/releases/download/{{ dockerapp_json_reponse.json[0].tag_name }}/docker-app-linux.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
   - name: Rename docker-app binary and set group ownership to docker
@@ -598,13 +598,13 @@
 
   - name: Get latest release info for nimbusapp
     uri:
-      url: https://api.github.com/repos/admpresales/nimbusapp/releases
+      url: "https://api.github.com/repos/admpresales/nimbusapp/releases/latest"
       return_content: true
     register: nimbusapp_json_reponse
 
   - name: Download nimbusapp
     unarchive:
-      src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusapp_json_reponse.json[0].name }}/nimbusapp.tar.gz"
+      src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusapp_json_reponse.json.tag_name }}/nimbusapp.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
 
