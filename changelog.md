@@ -1,6 +1,14 @@
 # nimbusserver-ansible
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# [2019.04] - 2019-04-09
+
+### Added
+- nimbus-server-update to run ansible-pull and update the system
+
+### Changed
+- All file paths in nimbusserver.yml are now relative, enabling ansible-playbook and ansible-pull to run from any git clone
+
 # [2018.09] - 2018-09-28
 
 ### Added
