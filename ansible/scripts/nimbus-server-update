@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# nimbus-server-update
+#
+# Run most recently deployed ansible instructions on this VM, restart containers after
+
+# Configuration can be overwritten with environment variables:
+#   export NIMBUS_UPDATE_REPO=git://github.com/jasoncorlett/nimbusserver-ansible
+#   export NIMBUS_UPDATE_BRANCH=some-project
+#   nimbus-server-update
+NIMBUS_UPDATE_REPO="${NIMBUS_UPDATE_REPO-git://github.com/admpresales/nimbusserver-ansible}"
+NIMBUS_UPDATE_BRANCH="${NIMBUS_UPDATE_BRANCH-master}"
+NIMBUS_UPDATE_PLAYBOOK="${NIMBUS_UPDATE_PLAYBOOK-ansible/nimbusserver.yml}"
+
+# List of running containers to be restarted later
+CONTAINERS="$(docker ps -q)"
+
+echo
+echo "Stopping docker containers"
+docker stop $CONTAINERS >/dev/null
+
+( set -x; ansible-playbook -U "${NIMBUS_UPDATE_URL}" -C "${NIMBUS_UPDATE_BRANCH}" "${NIMBUS_UPDATE_PLAYBOOK}" "$@" )
+
+echo "Restarting docker containers"
+docker start $CONTAINERS >/dev/null
