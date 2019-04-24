@@ -587,9 +587,8 @@
       owner: root
       group: wheel
 
-  - name: Copy autostart script into demo user's autostart directory
-    copy:
-      remote_src: true
+  - name: Create quickstart html page
+    template:
       src: "quickstart.html"
       dest: /opt/nimbus/docs/quickstart.html
       mode: 0755
