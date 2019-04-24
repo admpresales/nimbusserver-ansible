@@ -14,7 +14,10 @@
     {
       "type": "ansible-local",
       "playbook_dir": "ansible",
-      "playbook_file": "ansible/nimbusserver.yml"
+      "playbook_file": "ansible/nimbusserver.yml",
+      "extra_arguments": [
+          "--extra-vars \"version={{user `version`}}\""
+      ]
     }
   ],
   "builders": [
