@@ -23,6 +23,11 @@
       },
       {
         "Placement": "toolbar",
+        "Title": "JIRA",
+        "URL": "http://nimbusserver.aos.com:8099"
+      },
+      {
+        "Placement": "toolbar",
         "Title": "Agile Manager",
         "URL": "http://nimbusserver.aos.com:8083/agm/login",
         "Folder": "ADM Products"
@@ -73,6 +78,12 @@
         "Placement": "toolbar",
         "Title": "Project and Portfolio Management",
         "URL": "http://nimbusserver.aos.com:8087",
+        "Folder": "ADM Products"
+      },
+      {
+        "Placement": "toolbar",
+        "Title": "PPM Launch Pages",
+        "URL": "http://nimbusserver.aos.com:8088/menu.html",
         "Folder": "ADM Products"
       },
       {
