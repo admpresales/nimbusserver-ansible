@@ -302,7 +302,6 @@
     file:
       path: /home/demo/.config/google-chrome
       state: absent
-    tags: testing
 
   - name: Configure Docker Community Edition yum repository
     get_url:
