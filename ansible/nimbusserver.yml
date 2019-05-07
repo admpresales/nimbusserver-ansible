@@ -221,6 +221,10 @@
       regexp: '^(.*)MaxSessions(.*)$'
       replace: 'MaxSessions=1'
       backup: yes
+
+  - name: Remove existing chrome directory
+    shell: rm -rf /home/demo/.config/google-chrome
+
   - name: Configure Google Chrome yum repository
     yum_repository:
       name: google-chrome
@@ -297,6 +301,11 @@
       dest: /home/demo/Desktop
       mode: 0755
       owner: demo
+  - name: Remove user's existing chrome settings to update bookmarks
+    file:
+      path: /home/demo/.config/google-chrome
+      state: absent
+    tags: testing
 
   - name: Configure Docker Community Edition yum repository
     get_url:
