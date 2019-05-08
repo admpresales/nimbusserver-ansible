@@ -27,70 +27,130 @@
         "URL": "http://nimbusserver.aos.com:8099"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Agile Manager",
-        "URL": "http://nimbusserver.aos.com:8083/agm/login",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusserver.aos.com:8082/qcbin",
+        "Folder" : "ADM Products",
+        "Placement" : "toolbar",
+        "Title" : "ALM"
       },
       {
-        "Placement": "toolbar",
-        "Title": "ALM .NET",
-        "URL": "http://nimbusserver.aos.com:8082/qcbin",
-        "Folder": "ADM Products"
+        "Title" : "Atlas",
+        "Placement" : "toolbar",
+        "Folder" : "ADM Products",
+        "URL" : "http://nimbuswindows:8181/atlas/index.html"
       },
       {
-        "Placement": "toolbar",
-        "Title": "AutoPass",
-        "URL": "https://nimbusserver.aos.com:5814/autopass",
-        "Folder": "ADM Products"
+        "Folder" : "ADM Products",
+        "Placement" : "toolbar",
+        "Title" : "AutoPass",
+        "URL" : "https://nimbusserver.aos.com:5814/autopass"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Deployment Automation",
-        "URL": "http://nimbusserver.aos.com:8089/da/login",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusserver:8089/da",
+        "Folder" : "ADM Products",
+        "Placement" : "toolbar",
+        "Title" : "Deployment Automation (DA)"
       },
       {
-        "Placement": "toolbar",
-        "Title": "SSC",
-        "URL": "http://nimbusserver.aos.com:8086/ssc/#/",
-        "Folder": "ADM Products"
+        "Folder" : "ADM Products",
+        "Title" : "Fortify Software Security Center (SSC)",
+        "Placement" : "toolbar",
+        "URL" : "http://nimbusserver:8086/ssc/#/"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Fortify SSC",
-        "URL": "http://nimbusserver.aos.com:8086/ssc/#/",
-        "Folder": "ADM Products"
+        "Placement" : "toolbar",
+        "Title" : "Jira",
+        "Folder" : "ADM Products",
+        "URL" : "http://nimbusserver.aos.com:8099/"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Mobile Center",
-        "URL": "http://nimbusserver.aos.com:8084/integration/#/login",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbuswindows:8181/ConnectWeb/",
+        "Title" : "MF Connect",
+        "Placement" : "toolbar",
+        "Folder" : "ADM Products"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Network Virtualization",
-        "URL": "http://nimbusserver.aos.com:8182/shunra/auth/login",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusserver.aos.com:8084/integration/#/login",
+        "Placement" : "toolbar",
+        "Title" : "Mobile Center (MC)",
+        "Folder" : "ADM Products"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Project and Portfolio Management",
-        "URL": "http://nimbusserver.aos.com:8087",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusclient:8182/shunra/auth/login",
+        "Title" : "Network Virtualization (NV)",
+        "Placement" : "toolbar",
+        "Folder" : "ADM Products"
       },
       {
-        "Placement": "toolbar",
-        "Title": "PPM Launch Pages",
-        "URL": "http://nimbusserver.aos.com:8088/menu.html",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusserver.aos.com:8087/",
+        "Folder" : "PPM",
+        "Title" : "Project and Portolio Management (PPM)",
+        "Placement" : "toolbar"
       },
       {
-        "Placement": "toolbar",
-        "Title": "Service Virtualization",
-        "URL": "https://nimbusserver.aos.com:6085/management",
-        "Folder": "ADM Products"
+        "URL" : "http://nimbusserver.aos.com:8088/",
+        "Folder" : "PPM",
+        "Placement" : "toolbar",
+        "Title" : "PPM Launch Pages"
+      },
+      {
+        "Folder" : "ADM Products",
+        "Title" : "Rhythm",
+        "Placement" : "toolbar",
+        "URL" : "http://nimbuswindows:8181/atlas/#perspective=agile"
+      },
+      {
+        "URL" : "http://nimbuswindows/workcenter/tmtrack.dll?StdPage&Template=rlc/admin&/administration/plugins",
+        "Folder" : "ADM Products",
+        "Title" : "RLC Admin",
+        "Placement" : "toolbar"
+      },
+      {
+        "Title" : "SaaS Login",
+        "Placement" : "toolbar",
+        "Folder" : "ADM Products",
+        "URL" : "https://home.software.microfocus.com/myaccount/"
+      },
+      {
+        "Placement" : "toolbar",
+        "Title" : "SBM User Workspace",
+        "Folder" : "SBM",
+        "URL" : "http://nimbuswindows/tmtrack/tmtrack.dll"
+      },
+      {
+        "Placement" : "toolbar",
+        "Title" : "SBM Workcenter",
+        "Folder" : "SBM",
+        "URL" : "http://nimbuswindows/workcenter"
+      },
+      {
+        "URL" : "http://nimbuswindows:8085/mashupmgr",
+        "Folder" : "SBM",
+        "Title" : "MashUp Mgr",
+        "Placement" : "toolbar"
+      },
+      {
+        "URL" : "http://nimbuswindows:19120/login",
+        "Folder" : "ADM Products",
+        "Placement" : "toolbar",
+        "Title" : "Silk Central (SC)"
+      },
+      {
+        "Folder" : "SV",
+        "Title" : "SV Lab Server",
+        "Placement" : "toolbar",
+        "URL" : "https://nimbusserver:8445/api"
+      },
+      {
+        "URL" : "https://nimbusserver:6086/management",
+        "Placement" : "toolbar",
+        "Title" : "SV Management",
+        "Folder" : "SV"
+      },
+      {
+        "Title" : "SV Server",
+        "Placement" : "toolbar",
+        "Folder" : "SV",
+        "URL" : "https://nimbusserver:6085/management"
       }
     ],
     "NoDefaultBookmarks": true,
