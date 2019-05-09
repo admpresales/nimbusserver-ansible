@@ -1,6 +1,15 @@
 # nimbusserver-ansible
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# [2019-R1] - 2019-04-24
+
+### Added
+- nimbus-server-update to run ansible-pull and update the system
+
+### Changed
+- All file paths in nimbusserver.yml are now relative, enabling ansible-playbook and ansible-pull to run from any git clone
+- Version in title of quickstart.html is now set based on packer version argument
+
 # [2018.09] - 2018-09-28
 
 ### Added
@@ -39,4 +48,4 @@ All notable changes to this project will be documented in this file. The format 
 - Added aos.com domain to Internet favorites
 
 ### Changed
-- Configured and renamed Remote Desktop Viewer to LeanFT Viewer 
+- Configured and renamed Remote Desktop Viewer to LeanFT Viewer
