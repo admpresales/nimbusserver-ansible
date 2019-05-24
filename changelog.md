@@ -1,14 +1,17 @@
 # nimbusserver-ansible
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-# [2019-R1] - 2019-04-24
+# [2019-R1] - 2019-05-10
 
 ### Added
 - nimbus-server-update to run ansible-pull and update the system
 
 ### Changed
 - All file paths in nimbusserver.yml are now relative, enabling ansible-playbook and ansible-pull to run from any git clone
-- Version in title of quickstart.html is now set based on packer version argument
+- Version in title of quickstart.html is now set based on packer version argument or date for in-place upgrades
+- Now at version 0.6.0 of docker-app
+- Now on version 1.1.1 of nimbusapp
+- Base image is now CentOS-7-1810
 
 # [2018.09] - 2018-09-28
 
