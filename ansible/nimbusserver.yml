@@ -36,6 +36,17 @@
       dest: /etc/systemd/system/default.target
       state: link
       force: true
+
+  # urllib3 is installed by two different tools
+  # this causes conflicts. ensure only the yum installation is present.
+  - name: Remove urllib3 from pip
+    pip:
+      name: urllib3
+      state: absent
+  - name: Install urllib3 with yum
+    yum:
+      name: python-urllib3
+
   - name: Update all installed packages
     yum: name=* state=latest exclude=ansible
   - name: Disable (mask) automatic updates
@@ -373,10 +384,10 @@
       src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-pass-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
       dest: /usr/bin
       remote_src: yes
-#  - name: Set execution permissions on docker-credential-pass
-#    file:
-#      path: /usr/bin/docker-credential-pass
-#      mode: 0755
+  - name: Set execution permissions on docker-credential-pass
+    file:
+      path: /usr/bin/docker-credential-pass
+      mode: 0755
   - name: Create .docker directory for demo
     file:
       path: /home/demo/.docker
