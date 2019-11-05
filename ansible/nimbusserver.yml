@@ -303,6 +303,21 @@
       path: /home/demo/.config/google-chrome
       state: absent
 
+  - name: Download password-store
+    unarchive:
+      src: "https://git.zx2c4.com/password-store/snapshot/password-store-1.7.3.tar.xz"
+      dest: "/tmp"
+      remote_src: yes
+  - name: Install password-store
+    make:
+      chdir: "/tmp/password-store-1.7.3"
+      target: "install"
+    become: true
+  - name: Cleanup password-store install files
+    file:
+      path: "/tmp/password-store-1.7.3"
+      state: "absent"
+
   - name: Configure Docker Community Edition yum repository
     get_url:
       url: https://download.docker.com/linux/centos/docker-ce.repo
@@ -315,7 +330,6 @@
       - yum-utils
       - device-mapper-persistent-data
       - lvm2
-      - pass
   - name: Install Docker Community Edition
     yum:
       name: docker-ce
