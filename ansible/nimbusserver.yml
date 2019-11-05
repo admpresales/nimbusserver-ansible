@@ -37,6 +37,10 @@
       state: link
       force: true
 
+  - name: Install pip
+    yum:
+      name: python-pip
+
   # urllib3 is installed by two different tools
   # this causes conflicts. ensure only the yum installation is present.
   - name: Remove urllib3 from pip
@@ -123,7 +127,6 @@
       - rpm-build
       - zlib.i686
       - libstdc++.i686
-      - python-pip
       - python-devel
   - name: Install psutil to support dconf changes
     pip:
