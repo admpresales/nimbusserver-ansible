@@ -1,0 +1,295 @@
+- name: Create "demo" group
+  group:
+    name: demo
+    state: present
+- name: Add the 'demo' user
+  user:
+    name: demo
+    state: present
+    comment: Nimbus Demo User
+    groups: "demo, wheel"
+    password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
+    append: yes
+- name: Create desktop directory for demo
+  file:
+    path: /home/demo/Desktop
+    state: directory
+    mode: 0755
+    owner: demo
+    group: demo
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s
+
+- name: Create .config directory for demo
+  file:
+    path: /home/demo/.config
+    state: directory
+    mode: 0755
+    owner: demo
+    group: demo
+  
+- name: Add initial setup file to demo user's home directory
+  copy: content="yes" dest=/home/demo/.config/gnome-initial-setup-done
+
+- name: Allow VMWare Drag and Drop
+  file:
+    path: /home/demo/.cache/vmware/drag_and_drop
+    state: directory
+    mode: 0777
+    owner: demo
+    group: demo
+
+#Configuration block - need to become demo to perform these changes
+- block:
+  - name: Configure Gnome Tweak Tool for Demo - Show Icons
+    dconf: key="/org/gnome/desktop/background/show-desktop-icons" value="true" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Uncheck Mounted Volumes Icon
+    dconf: key="/org/gnome/nautilus/desktop/volumes-visible" value="false" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Uncheck Network Icon
+    dconf: key="/org/gnome/nautilus/desktop/network-icon-visible" value="false" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Uncheck Home Icon
+    dconf: key="/org/gnome/nautilus/desktop/home-icon-visible" value="false" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Check Trash Icon
+    dconf: key="/org/gnome/nautilus/desktop/trash-icon-visible" value="true" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Set Power Button to Nothing
+    dconf: key="/org/gnome/settings-daemon/plugins/power/power-button-action" value="'nothing'" state=present
+  - name: Configure Gnome Tweak Tool for Demo - Uncheck 'Show Application Menu' on Top Bar
+    dconf:
+      key: "/org/gnome/settings-daemon/plugins/xsettings/overrides"
+      value: "{'Gtk/ShellShowsAppMenu': <0>}"
+      state: present
+  - name: Configure Gnome Tweak Tool - Check 'Show date' Application Menu on Top Bar
+    dconf: key="/org/gnome/desktop/interface/clock-show-date" value="true" state=present
+  - name: Configure Gnome Tweak Tool - Set Number of Workspaces to 1
+    dconf: key="/org/gnome/desktop/wm/preferences/num-workspaces" value="1" state=present
+
+  - name: Get current speaker state
+    shell: amixer get Master | grep -q off;
+    register: speaker_status
+    failed_when:  "speaker_status.rc == 2"
+    changed_when: false
+
+#TODO: Make this idempotent
+  - name: Mute speaker volume
+    shell: amixer set Master mute
+    when: speaker_status.rc == 1
+
+  - name: Set Desktop Background Properties - Shading Type
+    dconf: key="/org/gnome/desktop/background/color-shading-type" value="'solid'" state=present
+  - name: Set Desktop Background Properties - Picture Option
+    dconf: key="/org/gnome/desktop/background/picture-options" value="'wallpaper'" state=present
+  - name: Set Desktop Background Properties - Picture Type
+    dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:////usr/share/gnome-control-center/pixmaps/noise-texture-light.png'" state=present
+  - name: Set Desktop Background Properties - Primary Color
+    dconf: key="/org/gnome/desktop/background/primary-color" value="'#425265'" state=present
+  - name: Set Desktop Background Properties - Secondary Color
+    dconf: key="/org/gnome/desktop/background/secondary-color" value="'#425265'" state=present
+  - name: Power Configuration - Set Power Saving Blank Screen to 'Never'
+    dconf: key="/org/gnome/desktop/session/idle-delay" value="uint32 0" state=present
+  - name: Time Settings - Clock format for interface to 12H Clock
+    dconf: key="/org/gnome/desktop/interface/clock-format" value="'12h'" state=present
+  - name: Time Settings - Clock format for files to 12H Clock
+    dconf: key="/org/gtk/settings/file-chooser/clock-format" value="'12h'" state=present
+  - name: Icon Settings - Set zoom to 50% (small)
+    dconf: key="/org/gnome/nautilus/icon-view/default-zoom-level" value="'small'" state=present
+  - name: Icon Settings - Sort Directories Before Files
+    dconf: key="/org/gtk/settings/file-chooser/sort-directories-first" value="true" state=present
+  - name: Icon Settings - Sort By set to 'Type'
+    dconf: key="/org/gnome/nautilus/preferences/default-sort-order" value="'type'" state=present
+  - name: Get default terminal profile
+    shell: gsettings get org.gnome.Terminal.ProfilesList default | cut -d "'" -f 2
+    register: default_profile_gui
+    changed_when: false
+  - name: Terminal Settings - Set default columns to 132
+    dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui.stdout }}/default-size-columns" value="132" state=present
+  - name: Terminal Settings - Set default rows to 40
+    dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui.stdout }}/default-size-rows" value="40" state=present
+  become: yes
+  become_user: demo
+#End Configuration Block
+
+
+- name: Create .docker directory for demo
+  file:
+    path: /home/demo/.docker
+    state: directory
+    mode: 0777
+    owner: demo
+    group: demo
+#Only create the config.json if it doesn't already exists (force: no)
+- name: Set credentials helper to pass
+  copy:
+    content: "{{ docker_credstore }}"
+    dest: /home/demo/.docker/config.json
+    force: no
+    mode: 0644
+    owner: demo
+    group: demo
+- name: Import private key into gpg
+  shell: gpg --import gpg/private.key
+  register: gpgprivate_cmd
+  failed_when: not "'already in secret keyring' in gpgprivate_cmd" and gpgprivate_cmd.rc >= 1
+  changed_when: gpgprivate_cmd.rc == 0
+  become: yes
+  become_user: demo
+- debug:
+    msg: "{{gpgprivate_cmd}}"
+- name: Import owner trust into gpg
+  shell: gpg --import-ownertrust gpg/ownertrust.txt
+  register: gpgtrust_cmd
+  changed_when: gpgtrust_cmd.stderr != ""
+  become: yes
+  become_user: demo
+- debug:
+    msg: "{{gpgtrust_cmd}}"
+#TODO: Not idempotent
+- name: Initialize pass
+  shell: pass init "Nimbus Demo"
+  register: pass_cmd
+  become: yes
+  become_user: demo
+
+#Setup SSH for root
+- name: Create SSH directory for root
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: 0755
+- name: Set authorized key for root
+  authorized_key:
+    user: root
+    state: present
+    key: '{{ pubkey }}'
+  become: yes
+  become_user: root
+- name: Copy id_rsa into ssh directory for root
+  copy:
+    remote_src: true
+    src: "ssh/id_rsa"
+    dest: /root/.ssh
+    mode: 0600
+- name: Copy id_rsa.pub into ssh directory for root
+  copy:
+    remote_src: true
+    src: "ssh/id_rsa.pub"
+    dest: /root/.ssh
+    mode: 0644
+
+#Setup SSH for demo
+- name: Set authorized key for demo user
+  authorized_key:
+    user: demo
+    state: present
+    key: '{{ pubkey }}'
+- name: Copy id_rsa into ssh directory for demo user
+  copy:
+    remote_src: true
+    src: "ssh/id_rsa"
+    dest: /home/demo/.ssh
+    owner: demo
+    mode: 0600
+- name: Copy id_rsa.pub into ssh directory for demo user
+  copy:
+    remote_src: true
+    src: "ssh/id_rsa.pub"
+    owner: demo
+    dest: /home/demo/.ssh
+    mode: 0644
+- name: Copy Firefox Launcher to Desktop
+  copy:
+    src: /usr/share/applications/firefox.desktop
+    dest: /home/demo/Desktop
+    mode: 0755
+    owner: demo
+#
+- name: Copy gnome-terminal launcher to desktop
+  copy:
+    src: /usr/share/applications/org.gnome.Terminal.desktop
+    dest: /home/demo/Desktop/org.gnome.Terminal.desktop
+    mode: 0755
+    owner: demo
+    group: demo
+
+- name: Copy nautalis (Files) launcher to desktop
+  copy:
+    src: /usr/share/applications/org.gnome.Nautilus.desktop
+    dest: /home/demo/Desktop/org.gnome.Nautilus.desktop
+    mode: 0755
+    owner: demo
+    group: demo
+
+- name: Copy system monitor launcher to desktop
+  copy:
+    src: /usr/share/applications/gnome-system-monitor.desktop
+    dest: /home/demo/Desktop/gnome-system-monitor.desktop
+    mode: 0755
+    owner: demo
+    group: demo
+
+- name: Create autostart directory for demo
+  file:
+    path: /home/demo/.config/autostart
+    state: directory
+    mode: 0755
+    owner: demo
+    group: demo
+
+  - name: Copy autostart script into demo user's autostart directory
+    copy:
+      remote_src: true
+      src: "trustdesktop.desktop"
+      dest: /home/demo/.config/autostart/trustdesktop.desktop
+      mode: 0755
+      owner: demo
+      group: demo
+  
+  - name: Add default browser configuration to demo user
+    copy:
+      remote_src: true
+      src: "config/mimeapps.list"
+      dest: /home/demo/.config/mimeapps.list
+      mode: 0644
+      owner: demo
+      group: demo
+  
+  - name: Add default resolution configuration to demo user
+    copy:
+      remote_src: true
+      src: "config/monitors.xml"
+      dest: /home/demo/.config/monitors.xml
+      mode: 0644
+      owner: demo
+      group: demo
+
+  #
+  - name: Create nimbus documents directory
+  file:
+    path: /opt/nimbus/docs
+    state: directory
+    mode: 0755
+    owner: root
+    group: wheel
+
+- name: Create quickstart html page
+  template:
+    src: "quickstart.html"
+    dest: /opt/nimbus/docs/quickstart.html
+    mode: 0755
+    owner: root
+    group: wheel
+
+- name: Create link for quickstart guide
+  file:
+    src: /opt/nimbus/docs/quickstart.html
+    dest: /home/demo/Desktop/quickstart.html
+    state: link
+    force: true
+    owner: demo
+    group: demo
+
+#

@@ -1,0 +1,125 @@
+- name: Add nimbusserver to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: 172.50.0.1  nimbusserver nimbusserver.aos.com
+  
+- name: Add nimbusclient to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: 172.40.0.1  nimbusclient
+
+- name: Download password-store
+  unarchive:
+    src: "https://git.zx2c4.com/password-store/snapshot/password-store-1.7.3.tar.xz"
+    dest: "/tmp"
+    remote_src: yes
+- name: Install password-store
+  make:
+    chdir: "/tmp/password-store-1.7.3"
+    target: "install"
+  become: true
+
+- name: Cleanup password-store install files
+  file:
+    path: "/tmp/password-store-1.7.3"
+    state: "absent"
+    - name: Configure Docker Community Edition yum repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker Community Edition
+  yum:
+    name: docker-ce
+- name: Enable and start Docker service
+  service: name=docker enabled=yes state=started
+- name: Add demo user to docker group
+  user:
+    name: demo
+    groups: docker
+    append: yes
+- name: Install Docker python library
+  pip:
+    name: docker
+
+- name: Create Docker network demo-net
+  docker_network:
+    name: demo-net
+    appends: true
+    ipam_options:
+      subnet: '172.50.0.0/16'
+      gateway: 172.50.0.1
+
+
+- name: Install Docker Compose library
+  pip:
+    name: docker-compose
+- name: Download docker-app
+  unarchive:
+    src: "https://github.com/docker/app/releases/download/{{ dockerapp_tag }}/docker-app-linux.tar.gz"
+    dest: /usr/local/bin
+    remote_src: yes
+- name: Rename docker-app binary and set group ownership to docker
+  copy:
+    remote_src: true
+    src: /usr/local/bin/docker-app-linux
+    dest: /usr/local/bin/docker-app
+    group: docker
+    mode: 0775
+
+#Install docker-credential-pass
+- name: Get Latest release info for docker-credential-helps
+  uri:
+    url: https://api.github.com/repos/docker/docker-credential-helpers/releases
+    return_content: true
+  register: dockercredentials_json_reponse
+- name: Download docker-credentials-pass
+  unarchive:
+    src: "https://github.com/docker/docker-credential-helpers/releases/download/{{ dockercredentials_json_reponse.json[0].tag_name }}/docker-credential-pass-{{ dockercredentials_json_reponse.json[0].tag_name }}-amd64.tar.gz"
+    dest: /usr/bin
+    remote_src: yes
+- name: Set execution permissions on docker-credential-pass
+  file:
+    path: /usr/bin/docker-credential-pass
+    mode: 0755
+- name: Create nimbus script directory
+  file:
+    path: /opt/nimbus/scripts
+    state: directory
+    mode: 0755
+    owner: root
+    group: wheel
+#
+- name: Get latest release info for nimbusapp
+  uri:
+    url: "https://api.github.com/repos/admpresales/nimbusapp/releases/latest"
+    return_content: true
+  register: nimbusapp_json_reponse
+
+- name: Download nimbusapp
+  unarchive:
+    src: "https://github.com/admpresales/nimbusapp/releases/download/{{ nimbusapp_json_reponse.json.tag_name }}/nimbusapp.tar.gz"
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Install nimbus scripts to /usr/local/bin
+  copy:
+    src: "scripts/{{item}}"
+    dest: /usr/local/bin
+    mode: 0755
+  loop: "{{nimbus_scripts}}"
+
+- name: Install nimbus scripts to /usr/bin
+  copy:
+    src: "scripts/{{item}}"
+    dest: /usr/bin
+    mode: 0755
+  loop: "{{nimbus_scripts}}"
+
+- name: Run dos2unix on nimbus scripts in /usr/local/bin
+  shell: "dos2unix /usr/local/bin/{{item}}"
+  loop: "{{nimbus_scripts}}"
+
+- name: Run dos2unix on nimbus scripts in /usr/bin
+  shell: "dos2unix /usr/bin/{{item}}"
+  loop: "{{nimbus_scripts}}"

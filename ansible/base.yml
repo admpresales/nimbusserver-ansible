@@ -1,0 +1,65 @@
+- name: Set Hostname to nimbusserver
+  hostname:
+    name: nimbusserver
+
+- name: Install pip
+  yum:
+    name: python-pip
+
+- name: Update all installed packages
+  yum: name=* state=latest exclude=ansible,docker-ce
+
+- name: Disable (mask) automatic updates
+  systemd:
+    name: packagekit.service
+    masked: yes
+- name: Stop and disable firewalld
+  service: name=firewalld enabled=no state=stopped
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+- name: Install Nimbus YUM packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - maven
+    - git
+    - gcc-c++
+    - java-1.8.0-openjdk-devel
+    - epel-release
+    - rpm-build
+    - zlib.i686
+    - libstdc++.i686
+    - python-devel
+
+- name: Install kernel-devel package for NV
+  yum:
+    name: kernel-devel
+- name: Install Telnet
+  yum:
+    name: telnet
+- name: Install Dos2Unix
+  yum:
+    name: dos2unix
+- name: Install psutil to support dconf changes
+  pip:
+    name: psutil
+
+- name: Install Exfat Utilities
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - exfat-utils
+    - fuse-exfat
+
+- name: Install Docker yum Packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
