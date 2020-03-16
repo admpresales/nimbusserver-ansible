@@ -64,6 +64,10 @@
     - psutil  # Used by dconf module
     - docker  # Used by docker_network module
 
+# URLLIB3 FIX
+# urllib3 is available in both pip and yum package managers
+# packages installed with both package managers use these dependencies
+# pip is able to cope with this, yum is not, so re-install here with yum
 - name: urllib3 fix - remove from pip
   pip:
     name: urllib3

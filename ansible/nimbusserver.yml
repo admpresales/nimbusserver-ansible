@@ -29,16 +29,6 @@
     - include_tasks: "desktop.yml"
     - include_tasks: "demo-user.yml"
 
-# # urllib3 is installed by two different tools
-# # this causes conflicts. ensure only the yum installation is present.
-# - name: Remove urllib3 from pip
-#   pip:
-#     name: urllib3
-#     state: absent
-# - name: Install urllib3 with yum
-#   yum:
-#     name: python-urllib3
-
 # # The docker_network module fails if an incompatible gssapi version is installed
 # # gssapi is not required for the plugin to function, so remove it
 # # https://github.com/paramiko/paramiko/issues/1069#issuecomment-352459767
