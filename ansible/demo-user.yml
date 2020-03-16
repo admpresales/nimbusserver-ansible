@@ -1,22 +1,17 @@
 - name: Create "demo" group
   group:
-    name: demo
+    name: "{{nimbus_group}}"
     state: present
+
 - name: Add the 'demo' user
   user:
-    name: demo
+    name: "{{nimbus_user}}"
     state: present
     comment: Nimbus Demo User
-    groups: "demo, wheel"
+    groups: "{{nimbus_group}}, docker, wheel"
     password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
     append: yes
-- name: Create desktop directory for demo
-  file:
-    path: /home/demo/Desktop
-    state: directory
-    mode: 0755
-    owner: demo
-    group: demo
+
 - name: Allow 'wheel' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers
@@ -25,24 +20,31 @@
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
     validate: visudo -cf %s
 
-- name: Create .config directory for demo
+- name: Create Demo User directories
   file:
-    path: /home/demo/.config
+    path: /home/{{nimbus_user}}/{{item}}
     state: directory
     mode: 0755
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
+  loop:
+    - Desktop
+    - .config
+    - .docker
+    - .config/autostart
   
 - name: Add initial setup file to demo user's home directory
-  copy: content="yes" dest=/home/demo/.config/gnome-initial-setup-done
+  copy:
+    content: "yes"
+    dest: /home/{{nimbus_user}}/.config/gnome-initial-setup-done
 
 - name: Allow VMWare Drag and Drop
   file:
-    path: /home/demo/.cache/vmware/drag_and_drop
+    path: /home/{{nimbus_user}}/.cache/vmware/drag_and_drop
     state: directory
     mode: 0777
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
 
 #Configuration block - need to become demo to perform these changes
 - block:
@@ -110,49 +112,46 @@
   - name: Terminal Settings - Set default rows to 40
     dconf: key="/org/gnome/terminal/legacy/profiles:/:{{ default_profile_gui.stdout }}/default-size-rows" value="40" state=present
   become: yes
-  become_user: demo
+  become_user: "{{nimbus_user}}"
 #End Configuration Block
 
-
-- name: Create .docker directory for demo
-  file:
-    path: /home/demo/.docker
-    state: directory
-    mode: 0777
-    owner: demo
-    group: demo
 #Only create the config.json if it doesn't already exists (force: no)
 - name: Set credentials helper to pass
   copy:
     content: "{{ docker_credstore }}"
-    dest: /home/demo/.docker/config.json
+    dest: /home/{{nimbus_user}}/.docker/config.json
     force: no
     mode: 0644
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
+
 - name: Import private key into gpg
   shell: gpg --import gpg/private.key
   register: gpgprivate_cmd
   failed_when: not "'already in secret keyring' in gpgprivate_cmd" and gpgprivate_cmd.rc >= 1
   changed_when: gpgprivate_cmd.rc == 0
   become: yes
-  become_user: demo
+  become_user: "{{nimbus_user}}"
+
 - debug:
     msg: "{{gpgprivate_cmd}}"
+
 - name: Import owner trust into gpg
   shell: gpg --import-ownertrust gpg/ownertrust.txt
   register: gpgtrust_cmd
   changed_when: gpgtrust_cmd.stderr != ""
   become: yes
-  become_user: demo
+  become_user: "{{nimbus_user}}"
+
 - debug:
     msg: "{{gpgtrust_cmd}}"
+
 #TODO: Not idempotent
 - name: Initialize pass
   shell: pass init "Nimbus Demo"
   register: pass_cmd
   become: yes
-  become_user: demo
+  become_user: "{{nimbus_user}}"
 
 #Setup SSH for root
 - name: Create SSH directory for root
@@ -160,6 +159,8 @@
     path: /root/.ssh
     state: directory
     mode: 0755
+  tags: [ 'root' ]
+
 - name: Set authorized key for root
   authorized_key:
     user: root
@@ -167,107 +168,94 @@
     key: '{{ pubkey }}'
   become: yes
   become_user: root
+  tags: [ 'root' ]
+
 - name: Copy id_rsa into ssh directory for root
   copy:
     remote_src: true
     src: "ssh/id_rsa"
     dest: /root/.ssh
     mode: 0600
+  tags: [ 'root' ]
+
 - name: Copy id_rsa.pub into ssh directory for root
   copy:
     remote_src: true
     src: "ssh/id_rsa.pub"
     dest: /root/.ssh
     mode: 0644
+  tags: [ 'root' ]
 
-#Setup SSH for demo
+# Setup SSH for demo
 - name: Set authorized key for demo user
   authorized_key:
-    user: demo
+    user: "{{nimbus_user}}"
     state: present
     key: '{{ pubkey }}'
+    
 - name: Copy id_rsa into ssh directory for demo user
   copy:
     remote_src: true
     src: "ssh/id_rsa"
-    dest: /home/demo/.ssh
-    owner: demo
+    dest: /home/{{nimbus_user}}/.ssh
+    owner: "{{nimbus_user}}"
     mode: 0600
+
 - name: Copy id_rsa.pub into ssh directory for demo user
   copy:
     remote_src: true
     src: "ssh/id_rsa.pub"
-    owner: demo
-    dest: /home/demo/.ssh
+    owner: "{{nimbus_user}}"
+    dest: /home/{{nimbus_user}}/.ssh
     mode: 0644
-- name: Copy Firefox Launcher to Desktop
+  
+- name: Copy Launchers to Desktop
   copy:
-    src: /usr/share/applications/firefox.desktop
-    dest: /home/demo/Desktop
+    src: /usr/share/applications/{{item}}.desktop
+    dest: /home/{{nimbus_user}}/Desktop
     mode: 0755
-    owner: demo
-#
-- name: Copy gnome-terminal launcher to desktop
-  copy:
-    src: /usr/share/applications/org.gnome.Terminal.desktop
-    dest: /home/demo/Desktop/org.gnome.Terminal.desktop
-    mode: 0755
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
+  loop:
+    - firefox
+    - org.gnome.Terminal
+    - org.gnome.Nautilus
+    - gnome-system-monitor
+    - google-chrome
 
-- name: Copy nautalis (Files) launcher to desktop
-  copy:
-    src: /usr/share/applications/org.gnome.Nautilus.desktop
-    dest: /home/demo/Desktop/org.gnome.Nautilus.desktop
-    mode: 0755
-    owner: demo
-    group: demo
-
-- name: Copy system monitor launcher to desktop
-  copy:
-    src: /usr/share/applications/gnome-system-monitor.desktop
-    dest: /home/demo/Desktop/gnome-system-monitor.desktop
-    mode: 0755
-    owner: demo
-    group: demo
-
-- name: Create autostart directory for demo
+- name: Remove user's existing chrome settings to update bookmarks
   file:
-    path: /home/demo/.config/autostart
-    state: directory
+    path: /home/demo/.config/google-chrome
+    state: absent
+
+- name: Copy autostart script into demo user's autostart directory
+  copy:
+    remote_src: true
+    src: "trustdesktop.desktop"
+    dest: /home/{{nimbus_user}}/.config/autostart/trustdesktop.desktop
     mode: 0755
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
 
-  - name: Copy autostart script into demo user's autostart directory
-    copy:
-      remote_src: true
-      src: "trustdesktop.desktop"
-      dest: /home/demo/.config/autostart/trustdesktop.desktop
-      mode: 0755
-      owner: demo
-      group: demo
-  
-  - name: Add default browser configuration to demo user
-    copy:
-      remote_src: true
-      src: "config/mimeapps.list"
-      dest: /home/demo/.config/mimeapps.list
-      mode: 0644
-      owner: demo
-      group: demo
-  
-  - name: Add default resolution configuration to demo user
-    copy:
-      remote_src: true
-      src: "config/monitors.xml"
-      dest: /home/demo/.config/monitors.xml
-      mode: 0644
-      owner: demo
-      group: demo
+- name: Add default browser configuration to demo user
+  copy:
+    remote_src: true
+    src: "config/mimeapps.list"
+    dest: /home/{{nimbus_user}}/.config/mimeapps.list
+    mode: 0644
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
 
-  #
-  - name: Create nimbus documents directory
+- name: Add default resolution configuration to demo user
+  copy:
+    remote_src: true
+    src: "config/monitors.xml"
+    dest: /home/{{nimbus_user}}/.config/monitors.xml
+    mode: 0644
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
+
+- name: Create nimbus documents directory
   file:
     path: /opt/nimbus/docs
     state: directory
@@ -286,10 +274,29 @@
 - name: Create link for quickstart guide
   file:
     src: /opt/nimbus/docs/quickstart.html
-    dest: /home/demo/Desktop/quickstart.html
+    dest: /home/{{nimbus_user}}/Desktop/quickstart.html
     state: link
     force: true
-    owner: demo
-    group: demo
+    owner: "{{nimbus_user}}"
+    group: "{{nimbus_group}}"
 
-#
+- name: Setup automatic login for demo
+  lineinfile:
+    line: "AutomaticLogin=demo"
+    path: /etc/gdm/custom.conf
+    insertafter: '^\[daemon\]'
+    state: present
+
+- name: Enable automatic login
+  lineinfile:
+    line: "AutomaticLoginEnable=True"
+    path: /etc/gdm/custom.conf
+    insertafter: '^AutomaticLogin=demo'
+    state: present
+
+- name: Copy Chrome Bookmarks to archive
+  copy:
+    src: "chrome/chrome-bookmarks.html"
+    dest: /opt/google/chrome/archive/chrome-bookmarks.html
+    mode: 0755
+    owner: demo

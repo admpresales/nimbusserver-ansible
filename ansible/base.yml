@@ -2,28 +2,37 @@
   hostname:
     name: nimbusserver
 
-- name: Install pip
-  yum:
-    name: python-pip
-
-- name: Update all installed packages
-  yum: name=* state=latest exclude=ansible,docker-ce
-
 - name: Disable (mask) automatic updates
   systemd:
     name: packagekit.service
     masked: yes
+  
 - name: Stop and disable firewalld
-  service: name=firewalld enabled=no state=stopped
+  service:
+    name: firewalld
+    enabled: no
+    state: stopped
+
 - name: Disable SELinux
   selinux:
     state: disabled
 
+- name: Update all installed packages
+  yum:
+    name: '*'
+    state: latest
+    exclude:
+      - ansible
+      - docker-ce
+
+- name: Install nux-dextop for Exfat Utilities
+  yum:
+    name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+    state: present
+
 - name: Install Nimbus YUM packages
   yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
+    name:
     - maven
     - git
     - gcc-c++
@@ -33,33 +42,26 @@
     - zlib.i686
     - libstdc++.i686
     - python-devel
+    - python-pip
+    - kernel-devel # For NV
+    - telnet
+    - dos2unix
+    - exfat-utils
+    - fuse-exfat
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+    - jq
 
-- name: Install kernel-devel package for NV
-  yum:
-    name: kernel-devel
-- name: Install Telnet
-  yum:
-    name: telnet
-- name: Install Dos2Unix
-  yum:
-    name: dos2unix
 - name: Install psutil to support dconf changes
   pip:
     name: psutil
 
-- name: Install Exfat Utilities
-  yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - exfat-utils
-    - fuse-exfat
+- name: urllib3 fix - remove from pip
+  pip:
+    name: urllib3
+    state: absent
 
-- name: Install Docker yum Packages
+- name: urllib3 fix - install with yum
   yum:
-    name: "{{ packages }}"
-  vars:
-    packages:
-    - yum-utils
-    - device-mapper-persistent-data
-    - lvm2
+    name: python-urllib3

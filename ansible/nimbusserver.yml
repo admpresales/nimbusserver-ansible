@@ -1,39 +1,48 @@
 - hosts: localhost
-remote_user: root
-become: yes
+  remote_user: root
+  become: yes
 
-vars:
-  uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.50.884.0"}
-  uft_extension_id: hkheagicnendeidmgfnaaocibkmiibbo
-  uft_firefox_extension_id: ec8030f7-c20a-464f-9b0e-13a3a9e97384
-  chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
-  chrome_metric_reporting_policy: { "MetricsReportingEnabled" : false }
-  chrome_popup_policy: { "DefaultPopupsSetting" : 1 }
-  chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
-  chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
-  chrome_sync_policy: { "SyncDisabled" : true }
-  docker_credstore: { "credsStore": "pass" }
-  pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
-  firefox_install_dir: /usr/lib64/firefox
-  dockerapp_tag: "v0.6.0"
-  nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-server-update" ]
+  vars:
+    uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "14.50.884.0"}
+    uft_extension_id: hkheagicnendeidmgfnaaocibkmiibbo
+    uft_firefox_extension_id: ec8030f7-c20a-464f-9b0e-13a3a9e97384
+    chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
+    chrome_metric_reporting_policy: { "MetricsReportingEnabled" : false }
+    chrome_popup_policy: { "DefaultPopupsSetting" : 1 }
+    chrome_default_browser_policy: { "DefaultBrowserSettingEnabled" : false }
+    chrome_newtab_policy: { "NewTabPageLocation" : "about:blank" }
+    chrome_sync_policy: { "SyncDisabled" : true }
 
-tasks:
+    docker_credstore: { "credsStore": "pass" }
+    pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
+    firefox_install_dir: /usr/lib64/firefox
+    dockerapp_tag: "v0.6.0"
+    nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-server-update" ]
 
-# urllib3 is installed by two different tools
-# this causes conflicts. ensure only the yum installation is present.
-- name: Remove urllib3 from pip
-  pip:
-    name: urllib3
-    state: absent
-- name: Install urllib3 with yum
-  yum:
-    name: python-urllib3
+    nimbus_install_dir: "/usr/local/bin"
+    nimbus_user: "demo"
+    nimbus_group: "{{nimbus_user}}"
 
-# The docker_network module fails if an incompatible gssapi version is installed
-# gssapi is not required for the plugin to function, so remove it
-# https://github.com/paramiko/paramiko/issues/1069#issuecomment-352459767
-- name: Remove python-gssapi
-  yum:
-    name: python-gssapi
-    state: removed
+  tasks:
+    - include_tasks: "base.yml"
+    - include_tasks: "docker.yml"
+    - include_tasks: "desktop.yml"
+    - include_tasks: "demo-user.yml"
+
+# # urllib3 is installed by two different tools
+# # this causes conflicts. ensure only the yum installation is present.
+# - name: Remove urllib3 from pip
+#   pip:
+#     name: urllib3
+#     state: absent
+# - name: Install urllib3 with yum
+#   yum:
+#     name: python-urllib3
+
+# # The docker_network module fails if an incompatible gssapi version is installed
+# # gssapi is not required for the plugin to function, so remove it
+# # https://github.com/paramiko/paramiko/issues/1069#issuecomment-352459767
+# - name: Remove python-gssapi
+#   yum:
+#     name: python-gssapi
+#     state: removed
