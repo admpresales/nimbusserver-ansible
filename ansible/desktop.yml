@@ -107,6 +107,14 @@
     - { "file": "policies.json", "dest": "distribution/policies.json" }
     - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi" }
 
+- name: Create nimbus script directory
+  file:
+    path: /opt/nimbus/scripts
+    state: directory
+    mode: 0755
+    owner: root
+    group: wheel
+
 - name: Copy desktop script into nimbus scripts
   copy:
     remote_src: true

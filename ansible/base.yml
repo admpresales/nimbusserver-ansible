@@ -53,9 +53,16 @@
     - lvm2
     - jq
 
-- name: Install psutil to support dconf changes
+- name: Update pip
   pip:
-    name: psutil
+    name: pip
+    state: latest
+
+- name: Install python modules
+  pip:
+    name: 
+    - psutil  # Used by dconf module
+    - docker  # Used by docker_network module
 
 - name: urllib3 fix - remove from pip
   pip:
