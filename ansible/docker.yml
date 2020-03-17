@@ -35,11 +35,18 @@
   yum:
     name: docker-ce-19.03.8
 
+- name: Enable docker over TCP
+  lineinfile:
+    path: '/lib/systemd/system/docker.socket'
+    line: ListenStream=2375
+    insertafter: '\[Socket\]'
+
 - name: Enable and start Docker service
   systemd:
     name: docker
     enabled: yes
     state: started
+    daemon_reload: yes
 
 # INSTALL DOCKER COMPOSE
 - name: Install Python3
