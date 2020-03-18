@@ -65,7 +65,6 @@
   pip:
     name: docker-compose==1.25.4
     executable: pip-3
-    exclude: urllib3
 
 # NETWORK SETUP
 - name: Create Docker network demo-net

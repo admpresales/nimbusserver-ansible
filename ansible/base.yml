@@ -57,13 +57,7 @@
   pip:
     name: pip
     state: latest
-
-- name: Install python modules
-  pip:
-    name: 
-    - psutil  # Used by dconf module
-    - docker  # Used by docker_network module
-
+    
 # URLLIB3 FIX
 # urllib3 is available in both pip and yum package managers
 # packages installed with both package managers use these dependencies
@@ -76,3 +70,10 @@
 - name: urllib3 fix - install with yum
   yum:
     name: python-urllib3
+
+- name: Install python modules
+  pip:
+    name: 
+    - psutil  # Used by dconf module
+    - docker  # Used by docker_network module
+
