@@ -6,7 +6,7 @@
   systemd:
     name: packagekit.service
     masked: yes
-  
+
 - name: Stop and disable firewalld
   service:
     name: firewalld
@@ -24,6 +24,7 @@
     exclude:
       - ansible
       - docker-ce
+      - google-chrome
 
 - name: Install nux-dextop for Exfat Utilities
   yum:
@@ -45,7 +46,7 @@
     - python-pip
     - kernel-devel # For NV
     - telnet
-    - dos2unix
+    - dos2unix     # For processing scripts
     - exfat-utils
     - fuse-exfat
     - yum-utils
@@ -57,7 +58,7 @@
   pip:
     name: pip
     state: latest
-    
+
 # URLLIB3 FIX
 # urllib3 is available in both pip and yum package managers
 # packages installed with both package managers use these dependencies
@@ -73,7 +74,7 @@
 
 - name: Install python modules
   pip:
-    name: 
+    name:
     - psutil  # Used by dconf module
     - docker  # Used by docker_network module
 

@@ -21,7 +21,7 @@
 
     nimbus_install_dir: "/usr/local/bin"
     nimbus_user: "demo"
-    nimbus_group: "{{nimbus_user}}"
+    nimbus_group: "{{ nimbus_user }}"
 
   tasks:
     - include_tasks: "base.yml"

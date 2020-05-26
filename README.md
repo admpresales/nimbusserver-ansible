@@ -6,7 +6,4 @@ To work, install Packer as per the instructions (https://www.packer.io/intro/get
 
 To run the build, do:
 
-packer build -var version=2018.09 nimbusserver.json
-
- 
-
+packer build -var version=2020-R1 nimbusserver.json

@@ -8,7 +8,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
       "script": "install-ansible.sh"
     },
     {
@@ -16,7 +16,8 @@
       "playbook_dir": "ansible",
       "playbook_file": "ansible/nimbusserver.yml",
       "extra_arguments": [
-          "--extra-vars \"version={{user `version`}}\""
+          "--extra-vars \"version={{ user `version` }}\"",
+          "-vvv"
       ]
     }
   ],
@@ -24,8 +25,8 @@
     {
       "type": "vmware-iso",
       "name": "nimbusserver",
-      "output_directory": "nimbusserver-{{user `version`}}",
-      "vm_name": "nimbusserver-{{user `version`}}",
+      "output_directory": "build/nimbusserver-{{ user `version` }}",
+      "vm_name": "nimbusserver-{{ user `version` }}",
       "guest_os_type": "centos-64",
       "version": "12",
       "disk_size": 307200,
@@ -33,11 +34,11 @@
       "ssh_password": "Password1",
       "ssh_timeout" : "20m",
       "iso_urls": [
-        "file://{{user `iso_local_dir`}}/{{user `iso_name`}}",
-        "http://mirrors.mit.edu/centos/7/isos/x86_64/{{user `iso_name`}}"
+        "file://{{ user `iso_local_dir` }}/{{ user `iso_name` }}",
+        "http://mirrors.mit.edu/centos/7/isos/x86_64/{{ user `iso_name` }}"
       ],
       "iso_checksum_type": "sha256",
-      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
       "shutdown_command": "shutdown -P now",
       "vmx_data": {
         "memsize": "10240",
@@ -75,7 +76,7 @@
     "post-processors": [
       {
         "type": "compress",
-        "output": "nimbusserver-{{user `version`}}.tar.gz",
+        "output": "build/nimbusserver-{{ user `version` }}.tar.gz",
         "compression_level": 9,
         "keep_input_artifact": true
       }

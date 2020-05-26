@@ -39,7 +39,7 @@
 
 - name: Create Google Chrome directories
   file:
-    path: "{{item}}"
+    path: "{{ item }}"
     state: directory
     mode: 0755
   loop:
@@ -57,15 +57,15 @@
 #Chrome GPO for setting browser settings as expected
 - name: "Set Chrome GPO Policies"
   copy:
-    content: "{{item.content}}"
-    dest: /etc/opt/chrome/policies/{{item.type}}/{{item.name}}.json
+    content: "{{ item.content }}"
+    dest: /etc/opt/chrome/policies/{{ item.type }}/{{ item.name }}.json
   loop:
-    - { "name": "passwordmanager", "type": "recommended", "content": "{{chrome_password_manager_policy}}" }
-    - { "name": "metricreporting", "type": "managed", "content": "{{chrome_metric_reporting_policy}}" }
-    - { "name": "popup", "type": "managed", "content": "{{chrome_popup_policy}}" }
-    - { "name": "defaultbrowser", "type": "managed", "content": "{{chrome_default_browser_policy}}" }
-    - { "name": "newtab", "type": "recommended", "content": "{{chrome_newtab_policy}}" }
-    - { "name": "sync", "type": "recommended", "content": "{{chrome_sync_policy}}" }
+    - { "name": "passwordmanager", "type": "recommended", "content": "{{ chrome_password_manager_policy }}" }
+    - { "name": "metricreporting", "type": "managed", "content": "{{ chrome_metric_reporting_policy }}" }
+    - { "name": "popup", "type": "managed", "content": "{{ chrome_popup_policy }}" }
+    - { "name": "defaultbrowser", "type": "managed", "content": "{{ chrome_default_browser_policy }}" }
+    - { "name": "newtab", "type": "recommended", "content": "{{ chrome_newtab_policy }}" }
+    - { "name": "sync", "type": "recommended", "content": "{{ chrome_sync_policy }}" }
 
 - name: Get UFT Extension for Chrome
   uri:
@@ -91,8 +91,8 @@
 
 - name: Copy firefox files to VM
   copy:
-    src: "firefox/{{item.file}}"
-    dest: "{{firefox_install_dir}}/{{item.dest}}"
+    src: "firefox/{{ item.file }}"
+    dest: "{{ firefox_install_dir }}/{{ item.dest }}"
     mode: 0644
   loop:
     - { "file": "local-settings.js", "dest": "defaults/pref" }

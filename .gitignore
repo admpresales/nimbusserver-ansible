@@ -6,3 +6,6 @@ output-vmware-iso
 *.gz
 *.tar
 *.retry
+
+# VMWare files
+build/*

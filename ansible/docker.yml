@@ -2,7 +2,7 @@
 - name: Add nimbusserver to /etc/hosts
   lineinfile:
     path: /etc/hosts
-    line: '{{item}}'
+    line: '{{ item }}'
   loop:
     - 172.50.0.1  nimbusserver nimbusserver.aos.com
     - 172.40.0.1  nimbusclient
@@ -85,35 +85,32 @@
 
 - name: "Download releases from Github: docker-credential-pass, docker-app-linux, nimbusapp"
   unarchive:
-    src: "{{item}}"
-    dest: "{{nimbus_install_dir}}"
+    src: "{{ item }}"
+    dest: "{{ nimbus_install_dir }}"
     remote_src: yes
     owner: root
     group: root
     mode: 0755
   vars:
-    helper_version: "{{dockercredentials_json_reponse.json[0].tag_name}}"
+    helper_version: "{{ dockercredentials_json_reponse.json[0].tag_name }}"
   loop:
-    - https://github.com/docker/docker-credential-helpers/releases/download/{{helper_version}}/docker-credential-pass-{{helper_version}}-amd64.tar.gz
+    - https://github.com/docker/docker-credential-helpers/releases/download/{{ helper_version }}/docker-credential-pass-{{ helper_version }}-amd64.tar.gz
     - https://github.com/admpresales/nimbusapp/releases/latest/download/nimbusapp.tar.gz
-    - https://github.com/docker/app/releases/download/{{dockerapp_tag}}/docker-app-linux.tar.gz
+    - https://github.com/docker/app/releases/download/{{ dockerapp_tag }}/docker-app-linux.tar.gz
 
 - name: Rename docker-app binary and set group ownership to docker
   copy:
     remote_src: true
-    src: "{{nimbus_install_dir}}/docker-app-linux"
-    dest: "{{nimbus_install_dir}}/docker-app"
+    src: "{{ nimbus_install_dir }}/docker-app-linux"
+    dest: "{{ nimbus_install_dir }}/docker-app"
     group: docker
     mode: 0775
 
 # INSTALL SCRIPTS
 - name: Install nimbus scripts to /usr/local/bin
-  copy:
-    src: "scripts/{{item}}"
-    dest: "{{nimbus_install_dir}}"
+  template:
+    src: "scripts/{{ item }}"
+    dest: "{{ nimbus_install_dir }}"
     mode: 0755
-  loop: "{{nimbus_scripts}}"
-
-- name: Run dos2unix on nimbus scripts in /usr/local/bin
-  shell: "dos2unix {{nimbus_install_dir}}/{{item}}"
-  loop: "{{nimbus_scripts}}"
+    newline_sequence: '\n'
+  loop: "{{ nimbus_scripts }}"
