@@ -26,6 +26,13 @@
       - docker-ce
       - google-chrome
 
+- name: Import nux-dextop GPG key
+  rpm_key:
+    state: present
+    key: http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+    fingerprint: 561C 96BD 2F7F DC2A DB5A  FD46 E98B FBE7 85C6 CD8A
+    # Fingerprinted on 2021-07-01 - proceed carefully if this fails!
+
 - name: Install nux-dextop for Exfat Utilities
   dnf:
     name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
