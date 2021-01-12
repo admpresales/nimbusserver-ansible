@@ -69,7 +69,7 @@
 
 - name: Get UFT Extension for Chrome
   uri:
-    url: https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&x=id%3D{{ uft_extension_id }}%26installsource%3Dondemand%26uc
+    url: https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&x=id%3D{{ uft_extension_id }}%26installsource%3Dondemand%26uc&acceptformat=crx2,crx3
     dest: /opt/google/chrome/archive/uft.crx
     status_code: 200,304
 
