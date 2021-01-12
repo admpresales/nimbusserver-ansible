@@ -42,8 +42,8 @@
     - rpm-build
     - zlib.i686
     - libstdc++.i686
-    - python-devel
-    - python-pip
+    - python36-devel
+    - python3-pip
     - kernel-devel # For NV
     - telnet
     - dos2unix     # For processing scripts
@@ -58,19 +58,6 @@
   pip:
     name: pip
     state: latest
-
-# URLLIB3 FIX
-# urllib3 is available in both pip and yum package managers
-# packages installed with both package managers use these dependencies
-# pip is able to cope with this, yum is not, so re-install here with yum
-- name: urllib3 fix - remove from pip
-  pip:
-    name: urllib3
-    state: absent
-
-- name: urllib3 fix - install with yum
-  yum:
-    name: python-urllib3
 
 - name: Install python modules
   pip:
