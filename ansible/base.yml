@@ -18,7 +18,7 @@
     state: disabled
 
 - name: Update all installed packages
-  yum:
+  dnf:
     name: '*'
     state: latest
     exclude:
@@ -27,12 +27,12 @@
       - google-chrome
 
 - name: Install nux-dextop for Exfat Utilities
-  yum:
+  dnf:
     name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
     state: present
 
 - name: Install Nimbus YUM packages
-  yum:
+  dnf:
     name:
     - maven
     - git

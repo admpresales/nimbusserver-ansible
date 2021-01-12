@@ -1,5 +1,5 @@
 - name: Install Gnome Desktop and Graphical Tools
-  yum:
+  dnf:
     name:
       - "@^GNOME Desktop"
       - "@Graphical Administration Tools"

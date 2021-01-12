@@ -32,8 +32,7 @@
 
 # INSTALL DOCKER
 - name: Install Docker Community Edition
-  yum:
-    name: docker-ce-19.03.8
+  dnf:
 
 - name: Enable docker over TCP
   lineinfile:
