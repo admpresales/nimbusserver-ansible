@@ -74,7 +74,7 @@ pipeline {
                 sh label: "Start Packer Build",
                         script: '''
                             export PATH=$PATH:/usr/local/packer
-                            packer build -var version=${VERSION} -var memory=64000 -var cpus=16 -on-error=ask -var headless=true -var aws=true -force -timestamp-ui nimbusserver.json
+                            packer build -var version=${VERSION} -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
                     '''
                 withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
                     office365ConnectorSend(

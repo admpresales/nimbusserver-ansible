@@ -3,7 +3,8 @@
     "version": "changeme",
     "iso_name": "CentOS-8.3.2011-x86_64-dvd1.iso",
     "iso_checksum": "aaf9d4b3071c16dbbda01dfe06085e5d0fdac76df323e3bbe87cce4318052247",
-    "iso_local_dir": "C:/Users/{{ env `USERNAME` }}/Downloads"
+    "iso_local_dir": "C:/Users/{{ env `USERNAME` }}/Downloads",
+    "headless": "false"
   },
   "provisioners": [
     {
@@ -30,6 +31,7 @@
       "name": "nimbusserver",
       "output_directory": "build/nimbusserver-{{ user `version` }}",
       "vm_name": "nimbusserver-{{ user `version` }}",
+      "headless": "{{ user `headless` }}",
       "guest_os_type": "centos-64",
       "version": "12",
       "disk_size": 307200,
