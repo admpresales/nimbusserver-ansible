@@ -23,6 +23,10 @@
     nimbus_user: "demo"
     nimbus_group: "{{ nimbus_user }}"
 
+    pass_version: 1.7.3
+    docker_version: 20.10.2
+    compose_version: 1.27.4
+
   tasks:
     - include_tasks: "base.yml"
     - include_tasks: "docker.yml"

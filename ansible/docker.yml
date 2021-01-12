@@ -10,19 +10,19 @@
 # INSTALL PASS
 - name: Download password-store
   unarchive:
-    src: "https://git.zx2c4.com/password-store/snapshot/password-store-1.7.3.tar.xz"
+    src: "https://git.zx2c4.com/password-store/snapshot/password-store-{{ pass_version }}.tar.xz"
     dest: "/tmp"
     remote_src: yes
 
 - name: Install password-store
   make:
-    chdir: "/tmp/password-store-1.7.3"
+    chdir: "/tmp/password-store-{{ pass_version }}"
     target: "install"
   become: true
 
 - name: Cleanup password-store install files
   file:
-    path: "/tmp/password-store-1.7.3"
+    path: "/tmp/password-store-{{ pass_version }}"
     state: "absent"
 
 - name: Configure Docker Community Edition yum repository
@@ -33,6 +33,7 @@
 # INSTALL DOCKER
 - name: Install Docker Community Edition
   dnf:
+    name: docker-ce-{{ docker_version }}
 
 - name: Enable docker over TCP
   lineinfile:
@@ -62,7 +63,7 @@
 
 - name: Install Docker python packages
   pip:
-    name: docker-compose==1.25.4
+    name: docker-compose=={{ compose_version }}
     executable: pip-3
 
 # NETWORK SETUP
