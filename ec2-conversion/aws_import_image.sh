@@ -2,7 +2,7 @@
 RELEASE_VERSION=$1
 VERSION=$2
 
-importId=$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/nimbusserver-${VERSION}-disk1.vmdk\} | jq -r .ImportTaskId )
+importId=$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk.vmdk\} | jq -r .ImportTaskId )
 printf '%s\n' "${importId}"
 importStatus=$(aws ec2 describe-import-image-tasks --import-task-ids ${importId} | jq -r .ImportImageTasks[0].Status)
 while [[ ${importStatus} == "active" ]]; do

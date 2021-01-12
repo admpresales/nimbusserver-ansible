@@ -93,8 +93,8 @@ pipeline {
             }
             steps {
                 withAWS(region:'us-east-1', credentials:'b6c88c9e-da69-4e09-bd1a-d73df8d5363a') {
-                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.7z.*', workingDir:'')
-                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/vmdk", includePathPattern:"nimbusserver-${VERSION}-disk1.vmdk", workingDir:'')
+                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'build/*.tar.gz', workingDir:'')
+                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/vmdk", includePathPattern:"build/nimbusserver-${VERSION}/disk.vmdk", workingDir:'')
                 }
             }
         }
