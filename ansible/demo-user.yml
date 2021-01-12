@@ -89,19 +89,18 @@
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-columns: '132' # Set default columns to 132
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-rows: '40'     # Set default rows to 40
 
-  - name: Get current speaker state
-    shell: amixer get Master | grep -q off;
-    register: speaker_status
-    failed_when:  "speaker_status.rc == 2"
-    changed_when: false
+# TODO: Is this still required?
+#   - name: Get current speaker state
+#     shell: amixer get Master | grep -q off;
+#     register: speaker_status
+#     failed_when:  "speaker_status.rc == 2"
+#     changed_when: false
 
-#TODO: Make this idempotent
-  - name: Mute speaker volume
-    command: amixer set Master mute
-    when: speaker_status.rc == 1
-  become: yes
-  become_user: "{{ nimbus_user }}"
-#End Configuration Block
+# #TODO: Make this idempotent
+#   - name: Mute speaker volume
+#     command: amixer set Master mute
+#     when: speaker_status.rc == 1
+# #End Configuration Block
 
 #Only create the config.json if it doesn't already exists (force: no)
 - name: Set credentials helper to pass

@@ -20,11 +20,12 @@
       - buildah
       - cockpit-podman
 
-- name: Disable initial-setup-graphical.service
-  service:
-    name: initial-setup-graphical
-    enabled: no
-    state: stopped
+# TODO: is this required?
+# - name: Disable initial setup process
+#   service:
+#     name: initial-setup
+#     enabled: no
+#     state: stopped
 
 - name: Create link for gnome desktop
   file:
