@@ -97,7 +97,7 @@
     - { "file": "local-settings.js", "dest": "defaults/pref" }
     - { "file": "mozilla.cfg", "dest": "mozilla.cfg" }
     - { "file": "policies.json", "dest": "distribution/policies.json" }
-    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/FT.FirefoxAgent@microfocus.com.xpi" }
+    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
 
 - name: Create nimbus script directory
   file:
