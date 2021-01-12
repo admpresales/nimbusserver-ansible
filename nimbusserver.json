@@ -9,7 +9,10 @@
     {
       "type": "shell",
       "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
-      "script": "install-ansible.sh"
+      "inline": [
+        "dnf install -y epel-release",
+        "dnf install -y ansible"
+      ]
     },
     {
       "type": "ansible-local",
