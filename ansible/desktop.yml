@@ -15,6 +15,10 @@
       - xrdp
       - google-chrome-stable
       - filezilla
+    exclude: # Podman/Buildah conflict with docker
+      - podman
+      - buildah
+      - cockpit-podman
 
 - name: Disable initial-setup-graphical.service
   service:
