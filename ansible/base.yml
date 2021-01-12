@@ -60,6 +60,7 @@
     - device-mapper-persistent-data
     - lvm2
     - jq
+    - make
 
 - name: Update pip
   pip:
