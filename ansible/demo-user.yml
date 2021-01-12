@@ -47,7 +47,9 @@
     group: "{{ nimbus_group }}"
 
 # Configuration block - need to become demo to perform these changes
-- block:
+- become: yes
+  become_user: "{{ nimbus_user }}"
+  block:
   - name: Get default terminal profile
     shell: gsettings get org.gnome.Terminal.ProfilesList default | cut -d "'" -f 2
     register: default_profile_gui
