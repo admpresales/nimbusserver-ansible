@@ -1,7 +1,7 @@
 - name: Install Gnome Desktop and Graphical Tools
   dnf:
     name:
-      - "@^GNOME Desktop"
+      - "@Server with GUI"
       - "@Graphical Administration Tools"
       - xrdp
 
