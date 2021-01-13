@@ -2,7 +2,7 @@
 RELEASE_VERSION=$1
 VERSION=$2
 
-importOutput="$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk.vmdk\})"
+importOutput="$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk-disk1.vmdk\})"
 importId="$(jq -r .ImportTaskId <<< "$importOutput")"
 
 echo "Import ID -- $importId"
