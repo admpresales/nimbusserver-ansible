@@ -2,24 +2,32 @@
 RELEASE_VERSION=$1
 VERSION=$2
 
-importId=$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk.vmdk\} | jq -r .ImportTaskId )
-printf '%s\n' "${importId}"
-importStatus=$(aws ec2 describe-import-image-tasks --import-task-ids ${importId} | jq -r .ImportImageTasks[0].Status)
-while [[ ${importStatus} == "active" ]]; do
-  sleep 300
-  importStatus=$(aws ec2 describe-import-image-tasks --import-task-ids ${importId} | jq -r .ImportImageTasks[0].Status)
-  printf '%s\n' "$importStatus"
+importOutput="$(aws ec2 import-image --description 'Nimbus Server Import' --license-type BYOL --disk-containers Description='Nimbus Server Import',Format=vmdk,UserBucket=\{S3Bucket=s3-adm-ftp,S3Key=nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk.vmdk\})"
+importId="$(jq -r .ImportTaskId <<< "$importOutput")"
+
+echo "Import ID -- $importId"
+echo "Import Output -- $importOutput"
+
+while
+  importStatus="$(aws ec2 describe-import-image-tasks --import-task-ids ${importId} | jq -r .ImportImageTasks[0].Status)"
+  echo "Import Status -- $importStatus"
+  [[ ${importStatus} == "active" ]]
+do
+  sleep 60
 done
 
-importObject=$(aws ec2 describe-import-image-tasks --import-task-ids ${importId})
-imageId=$(printf '%s\n' "$importObject" | jq -r .ImportImageTasks[0].ImageId)
-echo ${imageId}
+importObject="$(aws ec2 describe-import-image-tasks --import-task-ids ${importId})"
+imageId="$(jq -r .ImportImageTasks[0].ImageId <<< "$importObject")"
 
-imageStatus=$(aws ec2 describe-images --image-ids ${imageId})
-while [[ ${imageStatus} == "pending" ]]; do
-  sleep 300
-  imageStatus=$(aws ec2 describe-images --image-ids ${imageId})
-  echo Import Image Status - ${imageStatus}
+echo "Import Object -- $importObject"
+echo "Image ID -- $imageId"
+
+while
+  imageStatus="$(aws ec2 describe-images --image-ids ${imageId})"
+  echo "Import Image Status -- ${imageStatus}"
+  [[ ${imageStatus} == "pending" ]]
+do
+  sleep 60 
 done
 
 echo "Create Instance - to set EBS to self terminate"
@@ -45,7 +53,7 @@ echo "Creating Image from Stopped Instance"
 copyId=$(aws ec2 create-image --instance-id ${instanceId} --region us-east-1 --name nimbusserver-${RELEASE_VERSION} --description nimbusserver-${RELEASE_VERSION} | jq -r .ImageId )
 copyStatus=$(aws ec2 describe-images --image-ids ${copyId})
 while [[ $copyStatus == "pending" ]]; do
-  sleep 300
+  sleep 60
   copyStatus=$(aws ec2 describe-images --image-ids ${copyId})
   echo ${copyStatus}
 done
