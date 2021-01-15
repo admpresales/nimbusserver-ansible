@@ -1,3 +1,5 @@
+@Library("nimbus-pipeline-library") _
+
 pipeline {
     agent { label 'vm' }
 
@@ -107,7 +109,11 @@ pipeline {
             }
             steps {
                 withAWS(region:'us-east-1', credentials:'b6c88c9e-da69-4e09-bd1a-d73df8d5363a') {
-                    sh label: "Start VM Import to AWS", script: "ec2-conversion/aws_import_image.sh ${RELEASE_VERSION} $VERSION"
+                    awsImportVMDK(
+                        tag: "nimbusserver-${RELEASE_VERSION}",
+                        bucket: "s3-adm-ftp",
+                        key: "nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk-disk1.vmdk"
+                    )
                 }
             }
         }
