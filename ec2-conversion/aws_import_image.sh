@@ -36,7 +36,7 @@ done
 echo "Create Instance - to set EBS to self terminate"
 
 instanceOutput="$(aws ec2 run-instances --image-id ${imageId} --count 1 --instance-type t2.xlarge --block-device-mappings "[{\"DeviceName\": \"/dev/sda1\",\"Ebs\":{\"DeleteOnTermination\":true}}]")"
-instanceId="$(jq -r .Instances[0].InstanceId <<< "$instanceId")"
+instanceId="$(jq -r .Instances[0].InstanceId <<< "$instanceOutput")"
 
 echo "Instance ID: $instanceId"
 echo "Run Instance Output -- $instanceOutput"
@@ -50,7 +50,7 @@ do
 done
 
 echo "Stopping Instance"
-stopOutput"$(aws ec2 stop-instances --instance-ids ${instanceId})"
+stopOutput="$(aws ec2 stop-instances --instance-ids ${instanceId})"
 
 echo "Stop Output -- $stopOutput"
 
