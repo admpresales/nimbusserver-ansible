@@ -60,6 +60,7 @@
     - device-mapper-persistent-data
     - lvm2
     - jq
+    - make          # Build
     - cloud-init    # For user-data on AWS
 
 - name: Update pip
