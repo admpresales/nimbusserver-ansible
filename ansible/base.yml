@@ -60,6 +60,8 @@
     - lvm2
     - jq
     - make          # Build
+    - ftp           # Command line FTP
+    - perl
 
 - name: Update pip
   pip:

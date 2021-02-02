@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use IO::Handle;
+use Net::FTP;
+use Term::ReadKey;
+
+if (@ARGV != 2) {
+        print qq"Usage: $0 <FTP_SERVER> <ARCHIVE_PATH>
+
+        FTP_SERVER      Address of the FTP Server to download from
+        ARCHIVE_PATH    Path to a .tar[.gz] file containing one or more exported Docker images
+";
+        exit 1;
+}
+
+my ($ftpServer, $file) = @ARGV;
+
+my $ftpUser = $ENV{FTP_USER};
+
+if (!$ftpUser) {
+        print "Username: ";
+        $ftpUser = ReadLine;
+        chomp($ftpUser);
+}
+
+my $ftpPass = $ENV{FTP_PASS};
+
+if (!$ftpPass) {
+        print "Password: ";
+        ReadMode "noecho";
+        $ftpPass = ReadLine;
+        chomp($ftpPass);
+        ReadMode "normal";
+        print "\n";
+};
+
+my $ftp = Net::FTP->new($ftpServer) or die "Could not connect to FTP: $@\n";
+$ftp->login($ftpUser, $ftpPass) or die "Could not login: ", $ftp->message;
+$ftp->binary;
+
+open(my $load, '|-', 'docker', 'load') or die "Can't run docker: $!";
+
+$ftp->get($file, $load) or die "Could not get $file: ", $ftp->message;
+$ftp->quit;
