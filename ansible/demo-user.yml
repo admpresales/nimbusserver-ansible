@@ -281,6 +281,13 @@
     insertafter: '^AutomaticLogin=demo'
     state: present
 
+- name: Disable automatic login on AWS
+  lineinfile:
+    line: ExecStartPre=-/usr/bin/bash -c 'if curl --connect-timeout 1 http://169.254.169.254; then sed -i.bk "/AutomaticLogin/d" /etc/gdm/custom.conf; fi'
+    path: /usr/lib/systemd/system/gdm.service
+    insertafter: '^\[Service\]'
+    state: present
+
 - name: Copy Chrome Bookmarks to archive
   copy:
     src: "chrome/chrome-bookmarks.html"
