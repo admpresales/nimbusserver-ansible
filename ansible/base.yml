@@ -38,14 +38,13 @@
     name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
     state: present
 
-- name: Install Nimbus YUM packages
+- name: Install required OS packages
   dnf:
     name:
     - maven
     - git
     - gcc-c++
     - java-11-openjdk-devel
-    - epel-release
     - rpm-build
     - zlib.i686
     - libstdc++.i686
