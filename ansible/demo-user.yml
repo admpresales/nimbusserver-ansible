@@ -290,7 +290,7 @@
 
 - name: Get latest chrome bookmarks
   get_url:
-    url: https://raw.githubusercontent.com/admpresales/nimbus-bookmarks/master/chrome-bookmarks.html
+    url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/chrome-bookmarks.html
     dest: /opt/google/chrome/archive/chrome-bookmarks.html
     mode: 0755
     owner: demo

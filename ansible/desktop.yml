@@ -101,7 +101,7 @@
 
 - name: Download latest Firefox policies file from githubusercontent
   get_url:
-    url: https://raw.githubusercontent.com/admpresales/nimbus-bookmarks/master/firefox/policies.json
+    url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/firefox/policies.json
     dest: "{{ firefox_install_dir }}/distribution/policies.json"
     mode: 0644
 
