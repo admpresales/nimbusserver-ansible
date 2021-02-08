@@ -35,13 +35,15 @@ if (!$ftpPass) {
         chomp($ftpPass);
         ReadMode "normal";
         print "\n";
-};
+}
 
 my $ftp = Net::FTP->new($ftpServer) or die "Could not connect to FTP: $@\n";
 $ftp->login($ftpUser, $ftpPass) or die "Could not login: ", $ftp->message;
 $ftp->binary;
 
-open(my $load, '|-', 'docker', 'load') or die "Can't run docker: $!";
+open(my $load, '|-', 'docker', 'load') or die "Can't run docker load: $!";
 
 $ftp->get($file, $load) or die "Could not get $file: ", $ftp->message;
 $ftp->quit;
+
+close($load);

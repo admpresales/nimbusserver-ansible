@@ -17,7 +17,7 @@
     pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
     dockerapp_tag: "v0.6.0"
-    nimbus_scripts: [ "nimbus-docker-proxy" ]
+    nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-ftp-load" ]
 
     nimbus_install_dir: "/usr/local/bin"
     nimbus_user: "demo"
