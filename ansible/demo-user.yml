@@ -288,9 +288,9 @@
     insertafter: '^\[Service\]'
     state: present
 
-- name: Copy Chrome Bookmarks to archive
-  copy:
-    src: "chrome/chrome-bookmarks.html"
+- name: Get latest chrome bookmarks
+  get_url:
+    url: https://raw.githubusercontent.com/admpresales/nimbus-bookmarks/master/chrome-bookmarks.html
     dest: /opt/google/chrome/archive/chrome-bookmarks.html
     mode: 0755
     owner: demo

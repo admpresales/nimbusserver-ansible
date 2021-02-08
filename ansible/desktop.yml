@@ -96,8 +96,20 @@
   loop:
     - { "file": "local-settings.js", "dest": "defaults/pref" }
     - { "file": "mozilla.cfg", "dest": "mozilla.cfg" }
-    - { "file": "policies.json", "dest": "distribution/policies.json" }
     - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
+
+- name: Download latest Firefox policies file from githubusercontent
+  get_url:
+    url: https://raw.githubusercontent.com/admpresales/nimbus-bookmarks/master/firefox/policies.json
+    dest: "{{ firefox_install_dir }}/distribution/policies.json"
+    mode: 0644
+
+- name: Update path for Linux
+  lineinfile:
+    path: "{{ firefox_install_dir }}/distribution/policies.json"
+    regexp: '^(\s*"install_url":\s*").*?(".*)$'
+    state: present
+    line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
 
 - name: Create nimbus script directory
   file:
