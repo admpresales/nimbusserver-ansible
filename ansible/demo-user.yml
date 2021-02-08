@@ -55,6 +55,12 @@
     register: default_profile_gui
     changed_when: false
 
+  - name: Enable desktop icons
+    shell: |
+      gsettings set org.gnome.shell disable-user-extensions false
+      gsettings set org.gnome.desktop.interface enable-animations false
+      gnome-shell-extension-tool -e 'desktop-icons@gnome-shell-extensions.gcampax.github.com'
+
   - name: Update user dconf settings
     dconf:
       key: "{{ item[0] }}"

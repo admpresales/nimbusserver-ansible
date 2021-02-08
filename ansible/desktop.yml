@@ -15,6 +15,7 @@
       - xrdp
       - google-chrome-stable
       - filezilla
+      - gnome-tweaks
     exclude: # Podman/Buildah conflict with docker
       - podman
       - buildah
