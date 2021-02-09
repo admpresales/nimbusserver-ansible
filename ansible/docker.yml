@@ -1,11 +1,16 @@
 # HOSTS SETUP
-- name: Add nimbusserver to /etc/hosts
+- name: Download standard nimbus hosts file
+  url_get:
+    url: "https://raw.githubusercontent.com/admpresales/nimbus-commons/master/hosts"
+    dest: /etc/hosts
+
+- name: Use local address for nimbusserver
   lineinfile:
-    path: /etc/hosts
-    line: '{{ item }}'
-  loop:
-    - 172.50.0.1  nimbusserver nimbusserver.aos.com
-    - 172.40.0.1  nimbusclient
+      path: hosts.txt
+      state: present
+      backrefs: true
+      regexp: "^\\s*\\d+\\.\\d+\\.\\d+\\.\\d+(\\s+nimbusserver.*)$"
+      line: "172.50.0.1 \\1"
 
 # INSTALL PASS
 - name: Download password-store
