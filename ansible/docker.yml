@@ -6,7 +6,7 @@
 
 - name: Use local address for nimbusserver
   lineinfile:
-      path: hosts.txt
+      path: /etc/hosts
       state: present
       backrefs: true
       regexp: "^\\s*\\d+\\.\\d+\\.\\d+\\.\\d+(\\s+nimbusserver.*)$"
