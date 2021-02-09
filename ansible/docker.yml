@@ -1,6 +1,6 @@
 # HOSTS SETUP
 - name: Download standard nimbus hosts file
-  url_get:
+  get_url:
     url: "https://raw.githubusercontent.com/admpresales/nimbus-commons/master/hosts"
     dest: /etc/hosts
 
