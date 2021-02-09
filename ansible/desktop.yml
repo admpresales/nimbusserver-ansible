@@ -108,7 +108,8 @@
 - name: Update path for Linux
   lineinfile:
     path: "{{ firefox_install_dir }}/distribution/policies.json"
-    regexp: '^(\s*"install_url":\s*").*?(".*)$'
+    regexp: "^(\\s*"install_url":\\s*").*?(".*)$"
+    backrefs: true
     state: present
     line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
 
