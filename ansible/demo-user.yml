@@ -76,10 +76,9 @@
         /org/gnome/desktop/wm/preferences/num-workspaces: '1'           # Set Number of Workspaces to 1
         /org/gnome/desktop/background/color-shading-type: "'solid'"     # Shading Type
         /org/gnome/desktop/background/picture-options: "'wallpaper'"    # Picture Option
-        # Picture URI
-        /org/gnome/desktop/background/picture-uri: "'file:////usr/share/gnome-control-center/pixmaps/noise-texture-light.png'"
-        /org/gnome/desktop/background/primary-color: "'#425265'"      # Primary Colour
-        /org/gnome/desktop/background/secondary-color: "'#425265'"    # Secondary Colour
+        /org/gnome/desktop/background/picture-uri: "''"                 # Picture URI
+        /org/gnome/desktop/background/primary-color: "'#017293'"      # Primary Colour
+        /org/gnome/desktop/background/secondary-color: "'#017293'"    # Secondary Colour
         /org/gnome/desktop/session/idle-delay: "uint32 0"             # Set Power Saving Blank Screen to 'Never'
         /org/gnome/desktop/interface/clock-format: "'12h'"            #  Clock format for interface to 12H Clock
         /org/gtk/settings/file-chooser/clock-format: "'12h'"          # Clock format for files to 12H Clock
@@ -88,6 +87,10 @@
         /org/gnome/nautilus/preferences/default-sort-order: "'type'"  # Sort By set to 'Type'
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-columns: '132' # Set default columns to 132
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-rows: '40'     # Set default rows to 40
+        /org/gnome/shell/disable-user-extensions: 'false'
+        /org/gnome/shell/enabled-extensions: "['desktop-icons@gnome-shell-extensions.gcampax.github.com']"
+        /org/gnome/shell/favorite-apps: "['firefox.desktop', 'google-chrome.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Nautilus.desktop']"
+        
 
 # TODO: Is this still required?
 #   - name: Get current speaker state
