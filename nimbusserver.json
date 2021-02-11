@@ -20,7 +20,7 @@
       "playbook_dir": "ansible",
       "playbook_file": "ansible/nimbusserver.yml",
       "extra_arguments": [
-          "--extra-vars \"version={{ user `version` }}\"",
+          "--extra-vars \"version={{ user `version` }} registration_code={{ user `registration_code }}\"",
           "-vvv"
       ]
     }

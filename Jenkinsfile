@@ -73,11 +73,13 @@ pipeline {
                 expression { params.BUILD }
             }
             steps {
-                sh label: "Start Packer Build",
-                        script: '''
-                            export PATH=$PATH:/usr/local/packer
-                            packer build -var version=${VERSION} -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
-                    '''
+                withCredentials([string(credentialsId: 'mf-te-registration', variable: 'MF_TE')]) {
+                    sh label: "Start Packer Build",
+                            script: '''
+                                export PATH=$PATH:/usr/local/packer
+                                packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
+                        '''
+                }
                 withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
                     office365ConnectorSend(
                             color:  '00FF00',

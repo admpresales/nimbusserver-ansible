@@ -27,6 +27,8 @@
     docker_version: 20.10.2
     compose_version: 1.27.4
 
+    registration_code: '' # MF-TE Registration code, to be injected at build time
+
   tasks:
     - include_tasks: "base.yml"
     - include_tasks: "docker.yml"
