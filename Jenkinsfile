@@ -42,13 +42,16 @@ pipeline {
         stage('Preparing Pipeline') {
             steps {
                 script {
-                    if (params.RELEASE_VERSION == '')  {
-                        RELEASE_VERSION=VERSION + "-" + currentBuild.number
-                    } else {
+                    if (params.RELEASE_VERSION)
                         RELEASE_VERSION=params.RELEASE_VERSION
+                        VERSION=RELEASE_VERSION
+                    }
+                    else {
+                        RELEASE_VERSION=VERSION + "-" + currentBuild.number
                     }
 
-                    echo RELEASE_VERSION
+                    echo "VERSION: ${VERSION}"
+                    echo "RELEASE_VERSION: ${RELEASE_VERSION}"
 
                     withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
                         office365ConnectorSend(
