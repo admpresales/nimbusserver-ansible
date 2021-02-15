@@ -45,8 +45,7 @@ pipeline {
                     if (params.RELEASE_VERSION)
                         RELEASE_VERSION=params.RELEASE_VERSION
                         VERSION=RELEASE_VERSION
-                    }
-                    else {
+                    } else {
                         RELEASE_VERSION=VERSION + "-" + currentBuild.number
                     }
 
