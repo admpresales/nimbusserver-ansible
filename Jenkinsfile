@@ -42,7 +42,7 @@ pipeline {
         stage('Preparing Pipeline') {
             steps {
                 script {
-                    if (params.RELEASE_VERSION)
+                    if (params.RELEASE_VERSION) {
                         RELEASE_VERSION=params.RELEASE_VERSION
                         VERSION=RELEASE_VERSION
                     } else {
