@@ -8,7 +8,6 @@ pipeline {
     }
 
     environment {
-        VERSION = "${BRANCH_NAME}-BETA"
         FTP_ADDR = '34.226.67.113'
     }
 
@@ -43,9 +42,10 @@ pipeline {
             steps {
                 script {
                     if (params.RELEASE_VERSION) {
-                        RELEASE_VERSION=params.RELEASE_VERSION
-                        VERSION=RELEASE_VERSION
+                        VERSION=params.RELEASE_VERSION
+                        RELEASE_VERSION=VERSION
                     } else {
+                        VERSION = "${BRANCH_NAME}-BETA"
                         RELEASE_VERSION=VERSION + "-" + currentBuild.number
                     }
 
