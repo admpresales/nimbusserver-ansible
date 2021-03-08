@@ -102,7 +102,12 @@ pipeline {
                 expression { params.PUSH }
             }
             steps {
-                sh label: "Run ovftool", script: "ovftool --overwrite build/nimbusserver-${VERSION}/nimbusserver-${VERSION}.vmx build/nimbusserver-${VERSION}/disk.vmdk"
+                sh label: "Run ovftool", script: """
+                    cd build
+                    time ovftool --overwrite nimbusserver-${VERSION}/nimbusserver-${VERSION}.vmx nimbusserver-${VERSION}/disk.vmdk &
+                    time 7z a nimbusserver-${VERSION}.7z -v2G -m0=lzma2 -mx=5 -mmt=8 -y nimbusserver-${VERSION} &
+                    wait
+                """
                 
                 withAWS(region:'us-east-1', credentials:'b6c88c9e-da69-4e09-bd1a-d73df8d5363a') {
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.tar.gz', workingDir:'build')

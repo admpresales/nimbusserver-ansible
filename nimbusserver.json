@@ -70,13 +70,5 @@
       "http_directory": "kickstart",
       "boot_command": "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/anaconda-ks.cfg <enter><wait>"
     }
-    ],
-    "post-processors": [
-      {
-        "type": "compress",
-        "output": "build/nimbusserver-{{ user `version` }}.tar.gz",
-        "compression_level": 9,
-        "keep_input_artifact": true
-      }
-    ]
+  ]
 }
