@@ -74,6 +74,7 @@
         /org/gnome/settings-daemon/plugins/xsettings/overrides: "{'Gtk/ShellShowsAppMenu': <0>}"
         /org/gnome/desktop/interface/clock-show-date: 'true'            # Check 'Show date' Application Menu on Top Bar
         /org/gnome/desktop/wm/preferences/num-workspaces: '1'           # Set Number of Workspaces to 1
+        /org/gnome/desktop/wm/preferences/button-layout: "appmenu:minimize,maximize,close"
         /org/gnome/desktop/background/color-shading-type: "'solid'"     # Shading Type
         /org/gnome/desktop/background/picture-options: "'wallpaper'"    # Picture Option
         /org/gnome/desktop/background/picture-uri: "''"                 # Picture URI
@@ -88,9 +89,9 @@
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-columns: '132' # Set default columns to 132
         /org/gnome/terminal/legacy/profiles:/:{{ profile }}/default-size-rows: '40'     # Set default rows to 40
         /org/gnome/shell/disable-user-extensions: 'false'
-        /org/gnome/shell/enabled-extensions: "['desktop-icons@gnome-shell-extensions.gcampax.github.com']"
+        /org/gnome/shell/enabled-extensions: "['desktop-icons@gnome-shell-extensions.gcampax.github.com', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'window-list@gnome-shell-extensions.gcampax.github.com']"
         /org/gnome/shell/favorite-apps: "['firefox.desktop', 'google-chrome.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Nautilus.desktop']"
-        
+
 
 # TODO: Is this still required?
 #   - name: Get current speaker state
