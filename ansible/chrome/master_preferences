@@ -24,7 +24,7 @@
     "make_chrome_default" : true
   },
   "first_run_tabs" : [
-    "file:///opt/nimbus/docs/quickstart.html"
+    "file:///opt/nimbus/docs/README.html"
   ],
   "sync_promo" : {
     "user_skipped" : true,

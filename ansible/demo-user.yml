@@ -253,18 +253,18 @@
     owner: root
     group: wheel
 
-- name: Create quickstart html page
+- name: Create readme html page
   template:
-    src: "quickstart.html"
-    dest: /opt/nimbus/docs/quickstart.html
+    src: "README.html"
+    dest: /opt/nimbus/docs/README.html
     mode: 0755
     owner: root
     group: wheel
 
-- name: Create link for quickstart guide
+- name: Create link for readme
   file:
-    src: /opt/nimbus/docs/quickstart.html
-    dest: /home/{{ nimbus_user }}/Desktop/quickstart.html
+    src: /opt/nimbus/docs/README.html
+    dest: /home/{{ nimbus_user }}/Desktop/README.html
     state: link
     force: true
     owner: "{{ nimbus_user }}"

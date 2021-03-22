@@ -9,6 +9,6 @@ output-vmware-iso
 
 # VMWare files
 build/*
-
+temp/*
 # Ansible local settings
 ansible/ansible.cfg
