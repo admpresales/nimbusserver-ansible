@@ -100,7 +100,7 @@ pipeline {
                 """
                 
                 withAWS(region: 'us-east-1', credentials: 'nimbusbuild-aws') {
-                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.tar.gz', workingDir:'build')
+                    s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.7z*', workingDir:'build')
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/vmdk", includePathPattern:"disk-disk1.vmdk", workingDir:"build/nimbusserver-${VERSION}")
                 }
             }
