@@ -52,14 +52,7 @@ pipeline {
                     echo "VERSION: ${VERSION}"
                     echo "RELEASE_VERSION: ${RELEASE_VERSION}"
 
-                    withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
-                        office365ConnectorSend(
-                                color:  (currentBuild.previousBuild?.result == 'SUCCESS') ? '00FF00' : 'FF0000',
-                                message: "Build ${currentBuild.displayName} triggered by ${currentBuild.buildCauses[0].shortDescription}",
-                                webhookUrl: "${env.MS_URL}",
-                                status: "Building"
-                        )
-                    }
+                    notifyStart()
                 }
             }
         }
@@ -81,19 +74,16 @@ pipeline {
 
                 withCredentials([string(credentialsId: 'mf-te-registration', variable: 'MF_TE')]) {
                     sh label: "Start Packer Build",
-                            script: """
-                                export PATH=\$PATH:/usr/local/packer
-                                packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
+                       script: """
+                            export PATH=\$PATH:/usr/local/packer
+                            packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
                         """
                 }
-                withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
-                    office365ConnectorSend(
-                            color:  '00FF00',
-                            message: "Build ${currentBuild.displayName}",
-                            webhookUrl: "${env.MS_URL}",
-                            status: "VMWare Build Complete"
-                    )
-                }
+                sendNotification(
+                    color: '#00FF00',
+                    message: "Build ${currentBuild.displayName}",
+                    stauts: "VMWare Build Complete"
+                )
             }
         }
 
@@ -109,7 +99,7 @@ pipeline {
                     wait
                 """
                 
-                withAWS(region:'us-east-1', credentials:'b6c88c9e-da69-4e09-bd1a-d73df8d5363a') {
+                withAWS(region: 'us-east-1', credentials: 'nimbusbuild-aws') {
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.tar.gz', workingDir:'build')
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/vmdk", includePathPattern:"disk-disk1.vmdk", workingDir:"build/nimbusserver-${VERSION}")
                 }
@@ -121,7 +111,7 @@ pipeline {
                 expression { params.PUSHEC2 }
             }
             steps {
-                withAWS(region:'us-east-1', credentials:'b6c88c9e-da69-4e09-bd1a-d73df8d5363a') {
+                withAWS(region: 'us-east-1', credentials: 'nimbusbuild-aws') {
                     awsImportVMDK(
                         tag: "nimbusserver-${RELEASE_VERSION}",
                         bucket: "s3-adm-ftp",
@@ -133,14 +123,7 @@ pipeline {
     }
     post {
         always {
-            withCredentials([string(credentialsId: 'teams-webhook-url', variable: 'MS_URL')]) {
-                office365ConnectorSend(
-                        color:  (currentBuild.currentResult == 'SUCCESS') ? '00FF00' : 'FF0000',
-                        message: "Build ${currentBuild.displayName} *${currentBuild.currentResult}* in ${currentBuild.durationString.replaceAll(' and counting', '')}",
-                        webhookUrl: "${env.MS_URL}",
-                        status: "${currentBuild.currentResult}"
-                )
-            }
+            notifyComplete()
         }
     }
 }
