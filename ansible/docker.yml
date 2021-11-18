@@ -97,12 +97,3 @@
     dest: "{{ nimbus_install_dir }}/docker-app"
     group: docker
     mode: 0775
-
-# INSTALL SCRIPTS
-- name: Install nimbus scripts to /usr/local/bin
-  template:
-    src: "scripts/{{ item }}"
-    dest: "{{ nimbus_install_dir }}"
-    mode: 0755
-    newline_sequence: '\n'
-  loop: "{{ nimbus_scripts }}"
