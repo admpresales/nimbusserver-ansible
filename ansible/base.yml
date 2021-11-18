@@ -62,6 +62,7 @@
     - make          # Build
     - ftp           # Command line FTP
     - perl
+    - dhcp-client
 
 - name: Update pip
   pip:

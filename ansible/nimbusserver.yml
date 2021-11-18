@@ -17,7 +17,7 @@
     pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
     firefox_install_dir: /usr/lib64/firefox
     dockerapp_tag: "v0.6.0"
-    nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-ftp-load" ]
+    nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-ftp-load", "sap-vpn" ]
 
     nimbus_install_dir: "/usr/local/bin"
     nimbus_user: "demo"
@@ -27,11 +27,14 @@
     docker_version: 20.10.2
     compose_version: 1.27.4
 
+    softether_download: https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.38-9760-rtm/softether-vpnclient-v4.38-9760-rtm-2021.08.17-linux-x64-64bit.tar.gz
+
     registration_code: '' # MF-TE Registration code, to be injected at build time
 
   tasks:
     - include_tasks: "base.yml"
     - include_tasks: "docker.yml"
+    - include_tasks: "sap-vpn.yml"
     - include_tasks: "desktop.yml"
     - include_tasks: "demo-user.yml"
 
