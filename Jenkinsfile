@@ -75,7 +75,7 @@ pipeline {
                     sh label: "Start Packer Build",
                        script: """
                             export PATH=\$PATH:/usr/local/packer
-                            packer build -var version=${VERSION} -var "iso_local_dir=/tmp" -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
+                            packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
                         """
                 }
                 sendNotification(
