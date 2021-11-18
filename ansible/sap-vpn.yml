@@ -13,13 +13,3 @@
 - name: Build SoftEther
   make:
     chdir: /opt/vpnclient
-
-- name: Install SAP Hostnames
-  lineinfile:
-    path: /etc/hosts
-    line: "{{ item }}"
-  loop:
-  - 172.16.239.201	sap-hana-vpn.mfdemoportal.com
-  - 172.16.239.202	sap-netweaver-vpn.mfdemoportal.com
-  - 172.16.239.203	sap-sm-vpn.mfdemoportal.com
-  - 172.16.239.204	sap-bo-vpn.mfdemoportal.com
