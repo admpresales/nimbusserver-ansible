@@ -37,6 +37,7 @@
     - include_tasks: "sap-vpn.yml"
     - include_tasks: "desktop.yml"
     - include_tasks: "demo-user.yml"
+    - include_tasks: "cleanup.yml"
 
 # # The docker_network module fails if an incompatible gssapi version is installed
 # # gssapi is not required for the plugin to function, so remove it

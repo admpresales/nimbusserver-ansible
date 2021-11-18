@@ -1,0 +1,2 @@
+- name: "Cleanup DNF/YUM Cache"
+  command: "dnf clean all"
