@@ -3,7 +3,7 @@
   become: yes
 
   vars:
-    uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "15.0.2.3033"}
+    uft_extension_details: { "external_crx": "/opt/google/chrome/archive/uft.crx", "external_version": "15.0.2.3122"}
     uft_extension_id: kglbdihdcnciobeihioplammnkknjmbd
     uft_firefox_extension_id: ec8030f7-c20a-464f-9b0e-13a3a9e97384
     chrome_password_manager_policy: { "PasswordManagerEnabled" : false }
