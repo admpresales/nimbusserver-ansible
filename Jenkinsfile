@@ -74,6 +74,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'mf-te-registration', variable: 'MF_TE')]) {
                     sh label: "Start Packer Build",
                        script: """
+                            rm -rf build
                             export PATH=\$PATH:/usr/local/packer
                             packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
                         """
