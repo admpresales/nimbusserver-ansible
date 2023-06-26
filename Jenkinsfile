@@ -76,7 +76,8 @@ pipeline {
                        script: """
                             rm -rf build
                             export PATH=\$PATH:/usr/local/packer
-                            packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui nimbusserver.json
+                            packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui packer-base.json
+                            packer build -var version=${VERSION} -var "registration_code=${MF_TE}" -var memory=64000 -var cpus=16 -var headless=true -force -timestamp-ui packer-setup.json
                         """
                 }
                 sendNotification(
@@ -117,6 +118,29 @@ pipeline {
                         bucket: "s3-adm-ftp",
                         key: "nimbusserver-beta/${RELEASE_VERSION}/vmdk/disk-disk1.vmdk"
                     )
+                }
+            }
+        }
+
+        stage('Upload to FTP') {
+            when {
+                expression { params.PUSH }
+            }
+            steps {
+                withCredentials([
+                    string(credentialsId: 'mf-ftp-host', variable: 'FTP_HOST'),
+                    usernamePassword(credentialsId: 'ftp-adm-te', passwordVariable: 'FTP_PASS', usernameVariable: 'FTP_USER'),
+                    usernamePassword(credentialsId: 'mf-partner-ftp', passwordVariable: 'PARTNER_PASS', usernameVariable: 'PARTNER_USER'),
+                ]) {
+                    sh label: 'FTP Upload', script: '''
+                    cd build
+                    for f in *.7z*
+                    do
+                        echo "Uploading $f"
+                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/${RELEASE_VERSION}/" --ftp-create-dirs --user "${FTP_USER}:${FTP_PASS}"
+                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/${RELEASE_VERSION}/" --ftp-create-dirs --user "${PARTNER_USER}:${PARTNER_PASS}"
+                    done
+                    '''
                 }
             }
         }

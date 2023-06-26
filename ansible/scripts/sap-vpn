@@ -27,33 +27,51 @@ sub usage {
     exit 1;
 }
 
-my $verbose = $ENV{VPN_DEBUG} // 0;
-my $vpnClientDir = $ENV{VPN_CLIENT_DIR} // '/opt/vpnclient';
+my $verbose      = $ENV{VPN_DEBUG}         // 0;
+my $force        = $ENV{VPN_FORCE_CONNECT} // 0;
+my $vpnClientDir = $ENV{VPN_CLIENT_DIR}    // '/opt/vpnclient';
+my $accountName  = $ENV{VPN_ACCOUNT_NAME}  // 'sap-vpn';
 
 sub run {
     my @run = ('sudo', @_);
     
     print "\nRunning: @run\n\n" if $verbose;
     open my $out, '-|', @run or die "$!";
-    
+    my @lines = ();
+
     while (<$out>) {
         print if $verbose;
+        push @lines, $_;
     }
 
     close $out;
 
     print "\n$_[0] complete: $?\n" if $verbose;
+
+    chomp(@lines);
+    return @lines;
 }
 
-sub vpnclient { run(catfile($vpnClientDir, 'vpnclient'), @_) }
-sub vpncmd    { run(catfile($vpnClientDir, 'vpncmd'), qw(localhost /client /cmd), @_) }
+sub vpnclient { return run(catfile($vpnClientDir, 'vpnclient'), @_) }
+sub vpncmd    { return run(catfile($vpnClientDir, 'vpncmd'), qw(localhost /client /cmd), @_) }
+
+sub vpnstatus { 
+    my @output = vpncmd('accountstatusget', $accountName);
+
+    for (@output) {
+        return undef if /^Error occurred/;
+        return $1 if /^Session Status\s*\|(.*)$/;
+    }
+
+    return undef;
+}
 
 my $action = shift // usage;
 $verbose = 1 if $action eq 'cmd';
 
 my %dispatch = (
     import => \&import_config,
-    start => \&start_vpn,
+    start => \&start_and_connect_vpn,
     stop => \&stop_vpn,
     restart => \&restart_vpn,
     cmd => \&vpncmd,
@@ -63,19 +81,27 @@ usage "Unknown command: $action" unless $dispatch{$action};
 
 $dispatch{$action}->(@ARGV);
 
-sub start_vpn {
-    print "Starting VPN...\n";
-    vpnclient('start');
-
-    return if grep { /noconnect/ } @_;
+sub connect_vpn {
+    die "Could not find account: '$accountName'. Please import connection settings.\n" unless $force || vpnstatus();
 
     print "Attempting to connect...\n";
-    vpncmd('accountconnect', 'SAP-VPN');
+    vpncmd('accountconnect', $accountName);
     print "Getting IP Address...\n";
 
     run(qw(sudo dhclient -x)) if qx(pgrep dhclient);
     run(qw(sudo dhclient vpn_vpn));
+
     system(qw(ip address show dev vpn_vpn));
+}
+
+sub start_vpn {
+    print "Starting VPN...\n";
+    vpnclient('start');
+}
+
+sub start_and_connect_vpn {
+    start_vpn(@_);
+    connect_vpn(@_);
 }
 
 sub stop_vpn {
@@ -85,7 +111,7 @@ sub stop_vpn {
 
 sub restart_vpn {
     stop_vpn(@_);
-    start_vpn(@_);
+    start_and_connect_vpn(@_);
 }
 
 sub import_config {

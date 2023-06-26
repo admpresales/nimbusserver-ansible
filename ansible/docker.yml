@@ -12,33 +12,36 @@
       regexp: "^\\s*\\d+\\.\\d+\\.\\d+\\.\\d+(\\s+nimbusserver.*)$"
       line: "172.50.0.1 \\1"
 
-# INSTALL PASS
-- name: Download password-store
-  unarchive:
-    src: "https://git.zx2c4.com/password-store/snapshot/password-store-{{ pass_version }}.tar.xz"
-    dest: "/tmp"
-    remote_src: yes
+- name: Install Docker GPG Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+    keyring: /etc/apt/keyrings/docker.gpg
 
-- name: Install password-store
-  make:
-    chdir: "/tmp/password-store-{{ pass_version }}"
-    target: "install"
-  become: true
-
-- name: Cleanup password-store install files
-  file:
-    path: "/tmp/password-store-{{ pass_version }}"
-    state: "absent"
-
-- name: Configure Docker Community Edition yum repository
-  get_url:
-    url: https://download.docker.com/linux/centos/docker-ce.repo
-    dest: /etc/yum.repos.d/docker-ce.repo
+- name: Install Ubuntu Docker repo
+  template:
+    src:  docker/docker.list
+    dest: /etc/apt/sources.list.d/docker.list
+    mode: 0644
+    newline_sequence: '\n'
 
 # INSTALL DOCKER
 - name: Install Docker Community Edition
-  dnf:
-    name: docker-ce-{{ docker_version }}
+  apt:
+    update_cache: true
+    name:
+    - pass
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+
+- name: Add link for docker-compose to path
+  file:
+    src: /usr/libexec/docker/cli-plugins/docker-compose
+    dest: /usr/local/bin/docker-compose
+    state: link
 
 - name: Enable docker over TCP
   lineinfile:
@@ -52,11 +55,6 @@
     enabled: yes
     state: started
     daemon_reload: yes
-
-- name: Install Docker python packages
-  pip:
-    name: docker-compose=={{ compose_version }}
-    executable: pip-3
 
 # NETWORK SETUP
 - name: Create Docker network demo-net
@@ -75,7 +73,7 @@
     return_content: true
   register: dockercredentials_json_reponse
 
-- name: "Download releases from Github: docker-credential-pass, docker-app-linux, nimbusapp"
+- name: "Download releases from Github: docker-app-linux, nimbusapp"
   unarchive:
     src: "{{ item }}"
     dest: "{{ nimbus_install_dir }}"
@@ -83,12 +81,21 @@
     owner: root
     group: root
     mode: 0755
-  vars:
-    helper_version: "{{ dockercredentials_json_reponse.json[0].tag_name }}"
+
   loop:
-    - https://github.com/docker/docker-credential-helpers/releases/download/{{ helper_version }}/docker-credential-pass-{{ helper_version }}-amd64.tar.gz
     - https://github.com/admpresales/nimbusapp/releases/latest/download/nimbusapp.tar.gz
     - https://github.com/docker/app/releases/download/{{ dockerapp_tag }}/docker-app-linux.tar.gz
+# - https://github.com/docker/docker-credential-helpers/releases/download/{{ helper_version }}/docker-credential-pass-{{ helper_version }}-amd64.tar.gz
+
+- name: Download docker-credential-pass
+  get_url:
+    url: "https://github.com/docker/docker-credential-helpers/releases/download/{{ helper_version }}/docker-credential-pass-{{ helper_version }}.linux-amd64"
+    dest: "{{ nimbus_install_dir }}/docker-credential-pass"
+    owner: root
+    group: docker
+    mode: 0554
+  vars:
+    helper_version: "{{ dockercredentials_json_reponse.json[0].tag_name }}"
 
 - name: Rename docker-app binary and set group ownership to docker
   copy:

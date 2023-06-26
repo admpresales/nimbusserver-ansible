@@ -58,4 +58,5 @@ $ftp->quit;
 
 close($load);
 
-print "Done.\n";
+print "Load complete.\n";
+print "You can now start the container with nimbusapp.\n";

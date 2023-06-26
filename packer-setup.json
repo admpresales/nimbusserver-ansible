@@ -1,19 +1,17 @@
 {
   "variables": {
     "version": "changeme",
-    "os_version": "8.5.2111",
-    "iso_name": "CentOS-{{ user `os_version` }}-x86_64-dvd1.iso",
-    "iso_checksum": "3b795863001461d4f670b0dedd02d25296b6d64683faceb8f2b60c53ac5ebb3e",
-    "iso_local_dir": "C:/Users/{{ env `USERNAME` }}/Downloads",
     "headless": "false"
   },
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
+      "execute_command": "echo 'Password1' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'",
       "inline": [
-        "dnf install -y epel-release",
-        "dnf install -y ansible"
+        "whoami > /tmp/nimbuspacker",
+        "echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/nimbuspacker",
+        "apt update -y",
+        "apt install -y ansible"
       ]
     },
     {
@@ -22,29 +20,23 @@
       "playbook_file": "ansible/nimbusserver.yml",
       "extra_arguments": [
           "--extra-vars \"version={{ user `version` }} registration_code={{ user `registration_code` }}\"",
-          "-vvv"
+          "-vvv",
+          "-e ansible_become_password=Password1"
       ]
     }
   ],
   "builders": [
     {
-      "type": "vmware-iso",
+      "type": "vmware-vmx",
       "name": "nimbusserver",
+      "source_path": "./build/serverbase-{{ user `version` }}/serverbase-{{ user `version` }}.vmx",
       "output_directory": "build/nimbusserver-{{ user `version` }}",
       "vm_name": "nimbusserver-{{ user `version` }}",
       "headless": "{{ user `headless` }}",
-      "guest_os_type": "centos-64",
-      "version": "12",
-      "disk_size": 307200,
       "disk_type_id": 0,
-      "ssh_username": "root",
+      "ssh_username": "demo",
       "ssh_password": "Password1",
-      "ssh_timeout" : "20m",
-      "iso_urls": [
-        "file://{{ user `iso_local_dir` }}/{{ user `iso_name` }}",
-        "http://less.cogeco.net/CentOS/8/isos/x86_64/{{ user `iso_name` }}"
-      ],
-      "iso_checksum": "{{ user `iso_checksum` }}",
+      "ssh_timeout" : "30m",
       "shutdown_command": "shutdown -P now",
       "vmx_data": {
         "floppy0.present": "FALSE",
@@ -68,8 +60,7 @@
         "ethernet1.virtualDev": "e1000",
         "ethernet1.addressType": "generated"
       },
-      "http_directory": "kickstart",
-      "boot_command": "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/anaconda-ks.cfg <enter><wait>"
+      "http_directory": "http"
     }
   ]
 }

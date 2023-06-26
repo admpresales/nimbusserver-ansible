@@ -1,39 +1,41 @@
-- name: Configure Google Chrome yum repository
-  yum_repository:
-    name: google-chrome
-    description: google-chrome
-    baseurl: http://dl.google.com/linux/chrome/rpm/stable/$basearch
-    enabled: yes
-    gpgcheck: yes
-    gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+# - name: Configure Google Chrome yum repository
+#   yum_repository:
+#     name: google-chrome
+#     description: google-chrome
+#     baseurl: http://dl.google.com/linux/chrome/rpm/stable/$basearch
+#     enabled: yes
+#     gpgcheck: yes
+#     gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+- name: Install google chrome
+  apt:
+    deb: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
 
 - name: Install Gnome Desktop and Graphical Tools
-  dnf:
+  apt:
     name:
-      - "@Server with GUI"
-      - "@Graphical Administration Tools"
+      - gnome-session
+      - gdm3
       - xrdp
-      - google-chrome-stable
+      # - google-chrome-stable
       - filezilla
       - gnome-tweaks
-    exclude: # Podman/Buildah conflict with docker
-      - podman
-      - buildah
-      - cockpit-podman
+    # exclude: # Podman/Buildah conflict with docker
+    #   - podman
+    #   - buildah
+    #   - cockpit-podman
 
-# TODO: is this required?
-# - name: Disable initial setup process
-#   service:
-#     name: initial-setup
-#     enabled: no
-#     state: stopped
+- name: Disable initial setup process
+  service:
+    name: gnome-initial-setup-first-login
+    masked: true
 
-- name: Create link for gnome desktop
-  file:
-    src: /lib/systemd/system/runlevel5.target
-    dest: /etc/systemd/system/default.target
-    state: link
-    force: true
+# - name: Create link for gnome desktop
+#   file:
+#     src: /lib/systemd/system/runlevel5.target
+#     dest: /etc/systemd/system/default.target
+#     state: link
+#     force: true
 
 - name: Configure xrdp services
   systemd:

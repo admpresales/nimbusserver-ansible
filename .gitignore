@@ -12,3 +12,6 @@ build/*
 temp/*
 # Ansible local settings
 ansible/ansible.cfg
+
+# Local environment vars for build script
+.env

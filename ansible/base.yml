@@ -2,67 +2,72 @@
   hostname:
     name: nimbusserver
 
-- name: Disable (mask) automatic updates
+- name: Disable automatic updates
   systemd:
-    name: packagekit.service
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
     masked: yes
+  loop:
+  - packagekit.service
+  - unattended-upgrades.service
+  - apt-daily.timer
+  - apt-daily.service
+  - apt-daily-upgrade.timer
+  - apt-daily-upgrade.service
 
 - name: Stop and disable firewalld
   service:
-    name: firewalld
+    name: ufw
     enabled: no
     state: stopped
 
-- name: Disable SELinux
-  selinux:
-    state: disabled
+# - name: Disable SELinux
+#   selinux:
+#     state: disabled
 
 - name: Update all installed packages
-  dnf:
+  apt:
     name: '*'
     state: latest
-    exclude:
-      - ansible
-      - docker-ce
-      - google-chrome
+    update_cache: true
+    # exclude:
+    #   - ansible
+    #   - docker-ce
+    #   - google-chrome
 
-- name: Import nux-dextop GPG key
-  rpm_key:
-    state: present
-    key: http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
-    fingerprint: 561C 96BD 2F7F DC2A DB5A  FD46 E98B FBE7 85C6 CD8A
-    # Fingerprinted on 2021-07-01 - proceed carefully if this fails!
+# - name: Import nux-dextop GPG key
+#   rpm_key:
+#     state: present
+#     key: http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
+#     fingerprint: 561C 96BD 2F7F DC2A DB5A  FD46 E98B FBE7 85C6 CD8A
+#     # Fingerprinted on 2021-07-01 - proceed carefully if this fails!
 
-- name: Install nux-dextop for Exfat Utilities
-  dnf:
-    name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
-    state: present
+# - name: Install nux-dextop for Exfat Utilities
+#   dnf:
+#     name: http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+#     state: present
 
 - name: Install required OS packages
-  dnf:
+  apt:
     name:
     - maven
     - git
-    - gcc-c++
-    - java-11-openjdk-devel
-    - rpm-build
-    - zlib.i686
-    - libstdc++.i686
-    - python36-devel
+    - openjdk-11-jdk
+    # - zlib.i686
+    # - libstdc++.i686
     - python3-pip
-    - kernel-devel # For NV
+    # - kernel-devel # For NV
     - telnet
     - dos2unix     # For processing scripts
-    - exfat-utils
-    - fuse-exfat
-    - yum-utils
-    - device-mapper-persistent-data
-    - lvm2
+    - exfat-fuse
+    - exfatprogs
+    # - device-mapper-persistent-data
+    # - lvm2
     - jq
-    - make          # Build
     - ftp           # Command line FTP
     - perl
-    - dhcp-client
+    - isc-dhcp-client
 
 - name: Update pip
   pip:
