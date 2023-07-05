@@ -7,28 +7,35 @@
 #     gpgcheck: yes
 #     gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
 
-- name: Install google chrome
-  apt:
-    deb: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+
 
 - name: Install Gnome Desktop and Graphical Tools
   apt:
     name:
+      - ubuntu-gnome-desktop
       - gnome-session
       - gdm3
       - xrdp
       # - google-chrome-stable
       - filezilla
       - gnome-tweaks
+      - firefox
     # exclude: # Podman/Buildah conflict with docker
     #   - podman
     #   - buildah
     #   - cockpit-podman
 
+- name: Install google chrome
+  apt:
+    deb: "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+
 - name: Disable initial setup process
   service:
-    name: gnome-initial-setup-first-login
+    name: "{{ item }}"
     masked: true
+  loop:
+  - gnome-initial-setup
+  - gnome-initial-setup-first-login
 
 # - name: Create link for gnome desktop
 #   file:
@@ -100,12 +107,14 @@
     - { "file": "local-settings.js", "dest": "defaults/pref" }
     - { "file": "mozilla.cfg", "dest": "mozilla.cfg" }
     - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
+  ignore_errors: true
 
 - name: Download latest Firefox policies file from githubusercontent
   get_url:
     url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/firefox/policies.json
     dest: "{{ firefox_install_dir }}/distribution/policies.json"
     mode: 0644
+  ignore_errors: true
 
 - name: Update path for Linux
   lineinfile:
@@ -114,6 +123,7 @@
     backrefs: true
     state: present
     line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
+  ignore_errors: true
 
 - name: Create nimbus script directory
   file:
@@ -121,7 +131,7 @@
     state: directory
     mode: 0755
     owner: root
-    group: wheel
+    group: "{{ admin_group }}"
 
 - name: Copy desktop script into nimbus scripts
   copy:

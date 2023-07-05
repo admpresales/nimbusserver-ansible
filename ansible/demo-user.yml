@@ -8,16 +8,16 @@
     name: "{{ nimbus_user }}"
     state: present
     comment: Nimbus Demo User
-    groups: "{{ nimbus_group }}, docker, wheel"
+    groups: "{{ nimbus_group }}, docker, {{ admin_group }}, sudo"
     password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
     append: yes
 
-- name: Allow 'wheel' group to have passwordless sudo
+- name: Allow 'sudo' group to have passwordless sudo
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%wheel'
-    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
     validate: visudo -cf %s
 
 - name: Create Demo User directories
@@ -30,6 +30,7 @@
   loop:
     - Desktop
     - .config
+    - .cache/ubuntu-report
     - .docker
     - .config/autostart
 
@@ -37,6 +38,11 @@
   copy:
     content: "yes"
     dest: /home/{{ nimbus_user }}/.config/gnome-initial-setup-done
+
+- name: Opt out of ubuntu telemetry
+  copy:
+    content: '{"OptOut": true}'
+    dest: /home/{{ nimbus_user }}/.cache/ubuntu-report/ubuntu.22.04
 
 - name: Allow VMWare Drag and Drop
   file:
@@ -253,7 +259,7 @@
     state: directory
     mode: 0755
     owner: root
-    group: wheel
+    group: "{{ admin_group }}"
 
 - name: Create readme html page
   template:
@@ -261,7 +267,7 @@
     dest: /opt/nimbus/docs/README.html
     mode: 0755
     owner: root
-    group: wheel
+    group: "{{ admin_group }}"
 
 - name: Create link for readme
   file:
