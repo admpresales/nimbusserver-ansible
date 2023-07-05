@@ -26,7 +26,7 @@
 
     # file permissions
     admin_user: "root"
-    admin_group: "admin"
+    admin_group: "{{ admin_user }}"
 
     pass_version: 1.7.3
     docker_version: 20.10.2
@@ -42,7 +42,6 @@
     - include_tasks: "sap-vpn.yml"
     - include_tasks: "desktop.yml"
     - include_tasks: "demo-user.yml"
-    - include_tasks: "cleanup.yml"
 
 # # The docker_network module fails if an incompatible gssapi version is installed
 # # gssapi is not required for the plugin to function, so remove it

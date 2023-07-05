@@ -1,4 +1,0 @@
-- name: "Cleanup DNF/YUM Cache"
-  command:
-    cmd: "dnf clean all"
-    warn: false

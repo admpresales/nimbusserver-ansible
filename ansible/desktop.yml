@@ -98,33 +98,6 @@
     replace: 'Exec=/usr/bin/google-chrome-stable --password-store=basic %U --silent-debugger-extension-api'
     backup: yes
 
-- name: Copy firefox files to VM
-  copy:
-    src: "firefox/{{ item.file }}"
-    dest: "{{ firefox_install_dir }}/{{ item.dest }}"
-    mode: 0644
-  loop:
-    - { "file": "local-settings.js", "dest": "defaults/pref" }
-    - { "file": "mozilla.cfg", "dest": "mozilla.cfg" }
-    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
-  ignore_errors: true
-
-- name: Download latest Firefox policies file from githubusercontent
-  get_url:
-    url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/firefox/policies.json
-    dest: "{{ firefox_install_dir }}/distribution/policies.json"
-    mode: 0644
-  ignore_errors: true
-
-- name: Update path for Linux
-  lineinfile:
-    path: "{{ firefox_install_dir }}/distribution/policies.json"
-    regexp: "^(\\s*\"install_url\":\\s*\").*?(\".*)$"
-    backrefs: true
-    state: present
-    line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
-  ignore_errors: true
-
 - name: Create nimbus script directory
   file:
     path: /opt/nimbus/scripts

@@ -8,7 +8,7 @@
     name: "{{ nimbus_user }}"
     state: present
     comment: Nimbus Demo User
-    groups: "{{ nimbus_group }}, docker, {{ admin_group }}, sudo"
+    groups: "{{ nimbus_group }}, docker, sudo"
     password: "{{ 'Password1'|password_hash('sha256', 'mysecretsalt') }}"
     append: yes
 
@@ -278,26 +278,15 @@
     owner: "{{ nimbus_user }}"
     group: "{{ nimbus_group }}"
 
-- name: Setup automatic login for demo
+- name: Enable automatic login for demo user
   lineinfile:
-    line: "AutomaticLogin=demo"
-    path: /etc/gdm/custom.conf
+    line: "{{ item }}"
+    path: /etc/gdm3/custom.conf
     insertafter: '^\[daemon\]'
     state: present
-
-- name: Enable automatic login
-  lineinfile:
-    line: "AutomaticLoginEnable=True"
-    path: /etc/gdm/custom.conf
-    insertafter: '^AutomaticLogin=demo'
-    state: present
-
-- name: Disable automatic login on AWS
-  lineinfile:
-    line: ExecStartPre=-/usr/bin/bash -c 'if curl --connect-timeout 1 http://169.254.169.254; then sed -i.bk "/AutomaticLogin/d" /etc/gdm/custom.conf; fi'
-    path: /usr/lib/systemd/system/gdm.service
-    insertafter: '^\[Service\]'
-    state: present
+  loop:
+  - "AutomaticLoginEnable=True"
+  - "AutomaticLogin=demo"
 
 - name: Get latest chrome bookmarks
   get_url:
@@ -305,3 +294,45 @@
     dest: /opt/google/chrome/archive/chrome-bookmarks.html
     mode: 0755
     owner: demo
+
+- name: Initialize Firefox directories
+  become: true
+  become_user: demo
+  shell: firefox -v
+  ignore_errors: true
+
+- name: Copy firefox files to VM
+  copy:
+    src: "firefox/{{ item.file }}"
+    dest: "{{ firefox_install_dir }}/{{ item.dest }}"
+    mode: 0644
+  loop: # If a directory, destination path should end with a forward slash /
+    - { "file": "local-settings.js", "dest": "defaults/pref/" }
+    - { "file": "mozilla.cfg", "dest": "" }
+    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
+  ignore_errors: true
+
+- name: Download latest Firefox policies file from githubusercontent
+  get_url:
+    url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/firefox/policies.json
+    dest: "{{ firefox_install_dir }}/distribution/policies.json"
+    mode: 0644
+    owner: demo
+    group: demo
+  ignore_errors: true
+
+- name: Update path for Linux
+  lineinfile:
+    path: "{{ firefox_install_dir }}/distribution/policies.json"
+    regexp: "^(\\s*\"install_url\":\\s*\").*?(\".*)$"
+    backrefs: true
+    state: present
+    line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
+  ignore_errors: true
+
+- name: Disable automatic login on AWS
+  lineinfile:
+    line: ExecStartPre=-/usr/bin/bash -c 'if curl --connect-timeout 1 http://169.254.169.254; then sed -i.bk "/AutomaticLogin/d" /etc/gdm/custom.conf; fi'
+    path: /usr/lib/systemd/system/gdm.service
+    insertafter: '^\[Service\]'
+    state: present
