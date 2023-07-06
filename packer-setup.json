@@ -37,7 +37,7 @@
       "ssh_username": "demo",
       "ssh_password": "Password1",
       "ssh_timeout" : "30m",
-      "shutdown_command": "shutdown -P now",
+      "shutdown_command": "echo 'Password1' | sudo -S shutdown -P now",
       "vmx_data": {
         "floppy0.present": "FALSE",
         "memsize": "10240",
