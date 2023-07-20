@@ -47,11 +47,13 @@ while (!$ftpPass) {
 
 my $ftp = Net::FTP->new($ftpServer) or die "Could not connect to FTP: $@\n";
 $ftp->login($ftpUser, $ftpPass) or die "Could not login: ", $ftp->message;
+$ftp->hash(\*STDOUT, 1024000 * 5); # Show a hash mark every 5 MB
+$ftp->passive(1); # Passive mode connection prevents some timeout issues
 $ftp->binary;
 
 open(my $load, '|-', 'docker', 'load') or die "Can't run docker load: $!";
 
-print "Downloading '$file'...\n";
+print "Downloading '$file', this could take several minutes.\n";
 
 $ftp->get($file, $load) or die "Could not get '$file': ", $ftp->message;
 $ftp->quit;

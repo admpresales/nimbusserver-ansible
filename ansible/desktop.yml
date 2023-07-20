@@ -7,8 +7,6 @@
 #     gpgcheck: yes
 #     gpgkey: https://dl-ssl.google.com/linux/linux_signing_key.pub
 
-
-
 - name: Install Gnome Desktop and Graphical Tools
   apt:
     name:
@@ -20,6 +18,7 @@
       - filezilla
       - gnome-tweaks
       - firefox
+      - open-vm-tools-desktop
     # exclude: # Podman/Buildah conflict with docker
     #   - podman
     #   - buildah
