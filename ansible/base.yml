@@ -68,6 +68,7 @@
     - ftp           # Command line FTP
     - perl
     - isc-dhcp-client
+    - net-tools
 
 - name: Update pip
   pip:
