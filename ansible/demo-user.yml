@@ -295,11 +295,19 @@
     mode: 0755
     owner: demo
 
-- name: Initialize Firefox directories
-  become: true
-  become_user: demo
-  shell: firefox -v
-  ignore_errors: true
+# - name: Initialize Firefox directories
+#   become: true
+#   become_user: demo
+#   shell: firefox -v
+#   ignore_errors: true
+
+- name: Create firefox directories
+  file:
+    state: directory
+    path: "{{ firefox_install_dir }}/policies"
+    mode: 0755
+    owner: root
+    group: root
 
 - name: Copy firefox files to VM
   copy:
@@ -307,28 +315,25 @@
     dest: "{{ firefox_install_dir }}/{{ item.dest }}"
     mode: 0644
   loop: # If a directory, destination path should end with a forward slash /
-    - { "file": "local-settings.js", "dest": "defaults/pref/" }
+    - { "file": "local-settings.js", "dest": "pref/" }
     - { "file": "mozilla.cfg", "dest": "" }
-    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "distribution/extensions/" }
-  ignore_errors: true
+    - { "file": "FT.FirefoxAgent@microfocus.com.xpi", "dest": "extension/" }
 
 - name: Download latest Firefox policies file from githubusercontent
   get_url:
     url: https://raw.githubusercontent.com/admpresales/nimbus-commons/master/firefox/policies.json
-    dest: "{{ firefox_install_dir }}/distribution/policies.json"
+    dest: "{{ firefox_install_dir }}/policies/policies.json"
     mode: 0644
-    owner: demo
-    group: demo
-  ignore_errors: true
+    owner: root
+    group: root
 
 - name: Update path for Linux
   lineinfile:
-    path: "{{ firefox_install_dir }}/distribution/policies.json"
+    path: "{{ firefox_install_dir }}/policies/policies.json"
     regexp: "^(\\s*\"install_url\":\\s*\").*?(\".*)$"
     backrefs: true
     state: present
-    line: "\\1{{ firefox_install_dir }}/distribution/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
-  ignore_errors: true
+    line: "\\1{{ firefox_install_dir }}/extension/FT.FirefoxAgent@microfocus.com.xpi\\2"
 
 - name: Disable automatic login on AWS
   lineinfile:

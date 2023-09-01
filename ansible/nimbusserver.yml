@@ -16,7 +16,7 @@
     docker_credstore: { "credsStore": "pass" }
     pubkey: "{{ lookup('file', 'ssh/id_rsa.pub') }}"
     # firefox_install_dir: /usr/lib64/firefox
-    firefox_install_dir: /home/demo/snap/firefox/current/usr/lib/firefox
+    firefox_install_dir: /etc/firefox
     dockerapp_tag: "v0.6.0"
     nimbus_scripts: [ "nimbus-docker-proxy", "nimbus-ftp-load", "sap-vpn" ]
 
