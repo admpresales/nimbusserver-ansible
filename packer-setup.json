@@ -32,6 +32,7 @@
       "source_path": "./build/serverbase-{{ user `version` }}/serverbase-{{ user `version` }}.vmx",
       "output_directory": "build/nimbusserver-{{ user `version` }}",
       "vm_name": "nimbusserver-{{ user `version` }}",
+      "display_name": "nimbusserver-{{ user `version` }}",
       "headless": "{{ user `headless` }}",
       "disk_type_id": 0,
       "ssh_username": "demo",

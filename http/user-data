@@ -5,6 +5,10 @@ autoinstall:
     hostname: nimbusserver
     password: "$6$7y1jLkAWJ7PQ6lBA$M0rZBSgImfLwp0QTerZDjldccR1VOs29RsqKvqr2Ew9CHD334.mx7taQGE6k4uU7oE.thx3sQGw9XYmapPb2F1"
     username: demo
+  storage:
+    layout:
+      name: "lvm"
+      sizing-policy: "all"
   ssh:
     allow-pw: true
   early-commands:
