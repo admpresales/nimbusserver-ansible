@@ -100,12 +100,12 @@ pipeline {
                     wait
                 """
 
-                sh label "Create VHDX file for Azure", script: """
+                sh label: "Create VHDX file for Azure", script: """
                     cd build
                     time qemu-img convert nimbusserver-${VERSION}/disk-disk1.vmdk -O vhdx nimbusserver-${VERSION}-disk1.vhdx -p
                 """
 
-                sh label "Compress VHDX", script: """
+                sh label: "Compress VHDX", script: """
                     cd build
                     time 7z a nimbusserver-${VERSION}-vhdx.7z -v2G -m0=lzma2 -mx=5 -mmt=8 -y nimbusserver-${VERSION}-disk1.vhdx
                 """
