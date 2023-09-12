@@ -88,7 +88,7 @@ pipeline {
             }
         }
 
-        stage('Push to S3') {
+        stage('Convert and Upload') {
             when {
                 expression { params.PUSH }
             }
@@ -99,7 +99,17 @@ pipeline {
                     time 7z a nimbusserver-${VERSION}.7z -v2G -m0=lzma2 -mx=5 -mmt=8 -y nimbusserver-${VERSION} &
                     wait
                 """
-                
+
+                sh label "Create VHDX file for Azure", script: """
+                    cd build
+                    time qemu-img convert nimbusserver-${VERSION}/disk-disk1.vmdk -O vhdx nimbusserver-${VERSION}-disk1.vhdx -p
+                """
+
+                sh label "Compress VHDX", script: """
+                    cd build
+                    time 7z a nimbusserver-${VERSION}-vhdx.7z -v2G -m0=lzma2 -mx=5 -mmt=8 -y nimbusserver-${VERSION}-disk1.vhdx
+                """
+
                 withAWS(region: 'us-east-1', credentials: 'nimbusbuild-aws') {
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/zip",  includePathPattern:'*.7z*', workingDir:'build')
                     s3Upload(bucket:"s3-adm-ftp", path:"nimbusserver-beta/${RELEASE_VERSION}/vmdk", includePathPattern:"disk-disk1.vmdk", workingDir:"build/nimbusserver-${VERSION}")
@@ -137,8 +147,8 @@ pipeline {
                     for f in *.7z*
                     do
                         echo "Uploading $f"
-                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/${RELEASE_VERSION}/" --ftp-create-dirs --user "${FTP_USER}:${FTP_PASS}"
-                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/${RELEASE_VERSION}/" --ftp-create-dirs --user "${PARTNER_USER}:${PARTNER_PASS}"
+                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/nimbusserver-${RELEASE_VERSION}/" --ftp-create-dirs --user "${FTP_USER}:${FTP_PASS}"
+                        time curl -T "$f" "ftp://${FTP_HOST}/Nimbus/nimbusserver-${RELEASE_VERSION}/" --ftp-create-dirs --user "${PARTNER_USER}:${PARTNER_PASS}"
                     done
                     '''
                 }
