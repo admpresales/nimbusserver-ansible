@@ -53,6 +53,7 @@
     name:
     - maven
     - git
+    - openjdk-8-jdk   # UFTdev assets
     - openjdk-11-jdk
     # - zlib.i686
     # - libstdc++.i686
@@ -67,6 +68,8 @@
     - jq
     - ftp           # Command line FTP
     - perl
+    - cpanminus     # ChromeDriver downloader
+    - libjson-perl  # ChromeDriver downloader
     - isc-dhcp-client
     - net-tools
 
@@ -89,3 +92,10 @@
     mode: 0755
     newline_sequence: '\n'
   loop: "{{ nimbus_scripts }}"
+
+# Create symlink to java8 for legacy assets
+- name: Create Java 8 symlink
+  file:
+    path:  /usr/lib/jvm/java-1.8.0-openjdk
+    src: /usr/lib/jvm/java-8-openjdk-amd64
+    state: link
