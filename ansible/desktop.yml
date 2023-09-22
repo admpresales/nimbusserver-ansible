@@ -79,15 +79,6 @@
     src: "chrome/master_preferences"
     dest: /opt/google/chrome/master_preferences
 
-- name: Copy ChromeDriver installer to system
-  copy:
-    remote_src: true
-    src: "chrome/chromedriver-install.pl"
-    dest: "/tmp/"
-
-- name: Run ChromeDriver installer
-  command: perl /tmp/chromedriver-install.pl
-
 #Chrome GPO for setting browser settings as expected
 - name: "Set Chrome GPO Policies"
   copy:
