@@ -68,8 +68,6 @@
     - jq
     - ftp           # Command line FTP
     - perl
-    - cpanminus     # ChromeDriver downloader
-    - libjson-perl  # ChromeDriver downloader
     - isc-dhcp-client
     - net-tools
 
